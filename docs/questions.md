@@ -49,3 +49,24 @@
   2. les notions transmises par le LLM doivent être assimilées par l'étudiant (code explicable ligne par ligne en revue).
 - **Date de la réponse** : 2026-10-26
 - **Conséquence** : mise en place d'instructions communes (`docs/instructions-llm.md`) et d'un workflow par projet Claude / Gem → voir D-04.
+
+### Q-02 · Carburant retenu
+- **Date de la question** : 2026-10-27
+- **Posée par** : Noé Chauvin
+- **Question** : quel carburant l'analyse doit-elle couvrir ?
+- **Réponse** : le gazole.
+- **Date de la réponse** : 2026-10-27 (échange oral, confirmé par écrit le 27/10/2026)
+- **Conséquence** : D-06.
+
+### Q-03 · Structure des questions analytiques
+- **Date** : 2026-10-27
+- **Posée par** : Noé Chauvin (présentation du brouillon v1)
+- **Retour du commanditaire** : chaque axe principal doit être décomposé en 2 ou 3 sous-questions simples.
+- **Date de la réponse** : 2026-10-27 (échange oral, confirmé par écrit le 27/10/2026)
+- **Conséquence** : sous-questions QA-x.y dans la section 1.
+
+### Q-04 · Chocs à analyser
+- **Date de la question** : [date d'envoi]
+- **Posée par** : Noé Chauvin
+- **Question** : quels événements récents souhaitez-vous voir analysés (périodes ou dates précises) ?
+- **Réponse** : en attente
