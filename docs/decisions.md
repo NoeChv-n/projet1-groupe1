@@ -40,3 +40,17 @@
 - **Justification** : accord du commanditaire sous réserves (voir questions.md, Q-01) ; la note se joue en revue de code individuelle.
 - **Alternatives écartées** : usage libre sans cadre commun (code non maîtrisé, styles incohérents).
 - **Statut** : Validée (commanditaire)
+
+## D-05 · Comparaison rural / urbain écartée
+- **Date** : 2026-10-27
+- **Décision** : QA-1 compare les départements et les communes ; la distinction rural / urbain n'est pas traitée.
+- **Justification** : les données ne contiennent pas cette information ; il faudrait une source externe (grille de densité INSEE), soumise à accord écrit du commanditaire (CDC §3). Charge jugée trop lourde pour une première prestation.
+- **Alternatives écartées** : grille de densité INSEE (source supplémentaire, jointure en plus).
+- **Statut** : Proposée, à valider en équipe
+
+## D-06 · Analyse centrée sur le gazole
+- **Date** : 2026-10-27
+- **Décision** : toutes les questions analytiques portent sur le gazole ; `prix@nom` sert de filtre au chargement.
+- **Justification** : carburant des poids lourds du commanditaire (fédération de transporteurs routiers, CDC annexe A.10) ; validé par le commanditaire (Q-02). Comparaisons automatiquement à carburant égal (EF-08) ; volume réduit d'environ 70 % (ET-05).
+- **Alternatives écartées** : tous les carburants (hors besoin, plus lourd) ; carburant témoin E10 (non demandé).
+- **Statut** : Validée (commanditaire, Q-02)
