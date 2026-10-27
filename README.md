@@ -12,7 +12,6 @@ Sujet retenu : **n° 10, Prix des carburants** (annexe A du CDC-DIA2-UE01-2026).
 ## Questions analytiques
 1. À définir (issue #5, questions non validées)
 
-
 ## Données
 
 - **Source** : data.gouv.fr, « Prix des carburants en France »
@@ -22,13 +21,12 @@ Sujet retenu : **n° 10, Prix des carburants** (annexe A du CDC-DIA2-UE01-2026).
   - [Historique 2021](https://donnees.roulez-eco.fr/opendata/annee/2021)
   - [Historique 2022](https://donnees.roulez-eco.fr/opendata/annee/2022)
   - [Historique 2023](https://donnees.roulez-eco.fr/opendata/annee/2023)
-  - Flux v2 (stations) : [page du jeu de données](https://www.data.gouv.fr/datasets/prix-des-carburants-en-france-flux-instantane-v2-ameliore) (format du fichier à confirmer, issue #6) :
+  - Flux v2 (stations) : [page du jeu de données](https://www.data.gouv.fr/datasets/prix-des-carburants-en-france-flux-instantane-v2-ameliore) (format du fichier à confirmer, issue #6)
 - **Date de téléchargement** : 2026-10-27
 - **Périmètre retenu** (provisoire, voir `docs/decisions.md`) : Île-de-France, 2021 à 2023, gazole
 
 ## Installation
 À compléter une fois `requirements.txt` créé.
-
 
 ## Reproduire l'analyse
 1. Télécharger les données : `python src/download.py` (à confirmer)
