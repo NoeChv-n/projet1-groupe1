@@ -33,3 +33,10 @@
 - **Justification** : GIT-02 (1 approbation minimum) sans goulot d'étranglement ; rôle du responsable dépôt (CDC §11).
 - **Alternatives écartées** : un relecteur unique fixe (bloque l'équipe en cas d'absence).
 - **Statut** : Proposée, à valider en équipe
+
+## D-04 · Usage encadré d'un LLM comme assistant pédagogique
+- **Date** : 2026-10-27
+- **Décision** : chaque membre utilise un LLM (Claude ou Gemini) configuré avec les instructions communes ; le LLM explique et propose, l'étudiant écrit, exécute et commite lui-même.
+- **Justification** : accord du commanditaire sous réserves (voir questions.md, Q-01) ; la note se joue en revue de code individuelle.
+- **Alternatives écartées** : usage libre sans cadre commun (code non maîtrisé, styles incohérents).
+- **Statut** : Validée (commanditaire)
