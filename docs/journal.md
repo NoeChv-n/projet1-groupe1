@@ -38,7 +38,6 @@
 - **Fait** : dépôt public créé, collaborateurs invités, `main` protégée ; issues #1 à #7 créées et assignées avec milestones ; documents de pilotage rédigés dans `docs/` et PR ouverte
 - **Décisions** : D-02 (premier commit direct), D-03 (règle de relecture, à valider), D-04 (usage encadré du LLM) → déjà dans decisions.md
 - **Anomalies** : aucune
-- **Bloquant / question** : dates de Q-01 à compléter et confirmation écrite du commanditaire à archiver
 - **Prochaine étape** : faire relire la PR #3 par Thikana, puis lancer la discussion de l'issue #5
 
 ### 2026-10-27 · Noé · Chef de projet · Issue #3
