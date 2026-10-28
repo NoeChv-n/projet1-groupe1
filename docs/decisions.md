@@ -87,3 +87,12 @@
 - **Alternatives écartées** : XML du ministère (structure identique à l'historique, mais la jointure n'ajouterait quasiment aucune information).
 - **Statut** : Proposée, à valider en équipe
 
+## D-11 · Contrat de données des tables nettoyées
+- **Date** : 2026-10-28
+- **Décision** : les fonctions `nettoyer_*` produisent deux tables au format long (une ligne = un relevé ou une station), avec les colonnes ci-dessous.
+  - `data/processed/historique_gazole_idf.parquet` : `id_station` (str), `code_postal` (str), `departement` (str, 2 caractères), `implantation` (str, valeurs de `pop`), `date_releve` (datetime), `prix_gazole` (float, €/L)
+  - `data/processed/stations_idf.parquet` : `id_station` (str), `code_postal` (str), `departement` (str), `ville` (str), `implantation` (str), `latitude` (float, degrés), `longitude` (float, degrés)
+- **Justification** : 4 personnes codent en parallèle (QC-03) ; mêmes noms et mêmes types pour la jointure (EF-06) ; un seul carburant (D-06), donc pas besoin de format large ; Parquet pour tenir sur 8 Go (ET-05).
+- **Alternatives écartées** : format large (une colonne par carburant), inutile avec le seul gazole ; identifiant en entier, qui crée un risque d'échec de jointure entre XML et CSV.
+- **Statut** : Proposée (Noé), à valider en relecture de #8
+
