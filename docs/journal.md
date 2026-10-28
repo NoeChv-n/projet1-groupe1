@@ -1,3 +1,21 @@
+# Journal de bord
+
+## État actuel
+
+- **Jalon en cours** : J1, lancement (tag v0.1)
+- **Sujet** : n° 10, Prix des carburants
+- **Fait** : sujet attribué, README initial, structure du dépôt en cours (issue #1)
+- **En cours** : issue #1, structure minimale du dépôt (branche `chore/1-structure-depot`)
+- **Bloquant** : aucun
+
+## Entrées
+
+### 2026-10-27 · Thikana · Responsable dépôt · Issue #1
+- **Fait** : arborescence de l'annexe B créée, `.gitignore` écrit (données, .venv, pycache, checkpoints)
+- **Décisions** : ajout de `docs/journal.md`, absent de l'annexe B → à reporter dans decisions.md
+- **Anomalies** : aucune
+- **Bloquant / question** : `.gitkeep` de `data/raw` et `data/processed` pas encore confirmés versionnés (`git ls-files data` vide)
+- **Prochaine étape** : commiter les `.gitkeep`, pousser la branche et ouvrir la PR avec `Closes #1`
 # Journal de bord — Projet 1 · Prix des carburants · Groupe 1
 
 > **À quoi sert ce fichier** : c'est la mémoire commune de l'équipe et de nos LLM. Chacun le lit en début de session et y ajoute une entrée en fin de session.
@@ -32,6 +50,12 @@ _Mis à jour par le chef de projet au début de chaque semaine école et après 
 
 _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture ». On garde les ~15 dernières ; les plus anciennes sont déplacées dans `journal-archive.md` à chaque jalon._
 
+### 2026-10-27 · Samuel · Responsable restitution · Issue #4
+- **Fait** : README complété selon l'annexe B (8 sections dans l'ordre) ; contexte, données et équipe rédigés, autres sections en « à compléter »
+- **Décisions** : aucune
+- **Anomalies** : aucune
+- **Bloquant / question** : format du flux v2, date de téléchargement, dernière mise à jour des données et périmètre à confirmer avec Hafsa (#6) ; questions analytiques en attente (#5)
+- **Prochaine étape** : faire relire la PR par Thikana
 ### 2026-10-27 · Noé · Chef de projet · Issue #5
 
 - **Fait** : questions analytiques v1 rédigées (question principale + QA-1 à QA-4, 3 sous-questions chacune, reliées aux colonnes XML) ; exploration rapide du flux v2 et de l'historique 2025 (structure, volumes, stations autoroute par région) ; brouillons postés sur #5 et #6
@@ -70,3 +94,4 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Anomalies** : aucune
 - **Bloquant / question** : aucun
 - **Prochaine étape** : pousser la branche sur GitHub puis calculer les effectifs de l'IDF avec Pandas.
+- **Prochaine étape** : chaque membre configure son projet Claude / Gem et fait une première session test
