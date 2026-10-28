@@ -86,6 +86,7 @@
 - **Justification** : format libre pour le flux v2 (Q-06). Même identifiant `id`, même échelle de coordonnées et même code `pop` que l'historique, donc jointure EF-06 directe. Le CSV apporte `Département`, `code_departement` et `Région`, absents de l'historique : la jointure enrichit réellement les données. Lecture avec `pd.read_csv` (vu en cours).
 - **Alternatives écartées** : XML du ministère (structure identique à l'historique, mais la jointure n'ajouterait quasiment aucune information).
 - **Statut** : Proposée, à valider en équipe
+- Le flux peut être téléchargé en `.csv` ou en `.csv.gz` : `pd.read_csv` détecte la compression d'après l'extension, aucun traitement particulier n'est nécessaire dans `charger_stations()`.
 
 ## D-11 · Contrat de données des tables nettoyées
 - **Date** : 2026-10-28
@@ -95,4 +96,15 @@
 - **Justification** : 4 personnes codent en parallèle (QC-03) ; mêmes noms et mêmes types pour la jointure (EF-06) ; un seul carburant (D-06), donc pas besoin de format large ; Parquet pour tenir sur 8 Go (ET-05).
 - **Alternatives écartées** : format large (une colonne par carburant), inutile avec le seul gazole ; identifiant en entier, qui crée un risque d'échec de jointure entre XML et CSV.
 - **Statut** : Proposée (Noé), à valider en relecture de #8
+
+## D-12 · Organisation des notebooks
+- **Date** : 2026-10-28
+- **Décision** : six notebooks, exécutés dans cet ordre, chacun avec un seul propriétaire :
+  - `01_exploration_historique` (Hafsa), `01_exploration_stations` (Thikana), `01_premiers_indicateurs` (Samuel, provisoire)
+  - `02_nettoyage_historique` (Samuel), `02_nettoyage_stations` (Noé), `02_jointure` (Noé, co-autrice Thikana)
+  - `03_analyse` (propriétaire à désigner en J3) : un seul notebook, car l'analyse porte sur la table jointe des deux sources
+  Le code réutilisable vit dans `src/` ; en analyse, chacun écrit ses fonctions dans `src/indicators.py` et le propriétaire de `03_analyse` les appelle.
+- **Justification** : un `.ipynb` est un fichier JSON que Git ne sait pas fusionner à deux ; un propriétaire par fichier évite les conflits ; QC-03. Écart à l'annexe B autorisé s'il est décrit dans le README.
+- **Alternatives écartées** : un notebook unique pour tout le projet (conflits à chaque PR) ; plusieurs notebooks d'analyse (les deux sources doivent être croisées dans la même table).
+- **Statut** : Proposée (Noé), à valider en relecture
 
