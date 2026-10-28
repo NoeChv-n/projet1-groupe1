@@ -2,6 +2,28 @@
 
 ## État actuel
 
+- **Jalon en cours** : J1, lancement (tag v0.1)
+- **Sujet** : n° 10, Prix des carburants
+- **Fait** : sujet attribué, README initial, structure du dépôt en cours (issue #1)
+- **En cours** : issue #1, structure minimale du dépôt (branche `chore/1-structure-depot`)
+- **Bloquant** : aucun
+
+## Entrées
+
+### 2026-10-27 · Thikana · Responsable dépôt · Issue #1
+- **Fait** : arborescence de l'annexe B créée, `.gitignore` écrit (données, .venv, pycache, checkpoints)
+- **Décisions** : ajout de `docs/journal.md`, absent de l'annexe B → à reporter dans decisions.md
+- **Anomalies** : aucune
+- **Bloquant / question** : `.gitkeep` de `data/raw` et `data/processed` pas encore confirmés versionnés (`git ls-files data` vide)
+- **Prochaine étape** : commiter les `.gitkeep`, pousser la branche et ouvrir la PR avec `Closes #1`
+# Journal de bord — Projet 1 · Prix des carburants · Groupe 1
+
+> **À quoi sert ce fichier** : c'est la mémoire commune de l'équipe et de nos LLM. Chacun le lit en début de session et y ajoute une entrée en fin de session.
+> **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
+> **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
+
+## État actuel
+
 *Mis à jour par le chef de projet au début de chaque semaine école et après chaque point à distance. 15 lignes maximum.*
 
 - **Semaine / jalon** : S44 · J2 Exploration (26 → 30/10) · tag attendu : `v0.2` — **`v0.1` en retard (attendue S41), à poser en priorité**
@@ -34,6 +56,12 @@
 - **Anomalies** : aucune
 - **Bloquant / question** : format du flux v2, date de téléchargement, dernière mise à jour des données et périmètre à confirmer avec Hafsa (#6) ; questions analytiques en attente (#5)
 - **Prochaine étape** : faire relire la PR par Thikana
+### 2026-10-27 · Noé · Chef de projet · Issue #5
+- **Fait** : questions analytiques v1 rédigées (question principale + QA-1 à QA-4, 3 sous-questions chacune, reliées aux colonnes XML) ; exploration rapide du flux v2 et de l'historique 2025 (structure, volumes, stations autoroute par région) ; brouillons postés sur #5 et #6
+- **Décisions** : D-05 rural/urbain écarté (proposée) ; D-06 gazole (validée commanditaire) → déjà dans decisions.md
+- **Anomalies** : aucune créée — à documenter en exploration : `pop="N"` (1 station en 2025), relevés irréguliers par station
+- **Bloquant / question** : Q-04 (chocs à analyser) en attente du commanditaire ; région et années à trancher dans #6
+- **Prochaine étape** : intégrer les avis de l'équipe après la date limite, puis passer la PR #5 en « Ready for review »
 
 ### 2026-10-27 · Thikana · Responsable dépôt · Issue #1
 - **Fait** : arborescence de l'annexe B créée, `.gitignore` écrit (données, .venv, pycache, checkpoints)
@@ -41,11 +69,6 @@
 - **Anomalies** : aucune
 - **Bloquant / question** : `.gitkeep` de `data/raw` et `data/processed` pas encore confirmés versionnés (`git ls-files data` vide)
 - **Prochaine étape** : commiter les `.gitkeep`, pousser la branche et ouvrir la PR avec `Closes #1`
-# Journal de bord — Projet 1 · Prix des carburants · Groupe 1
-
-> **À quoi sert ce fichier** : c'est la mémoire commune de l'équipe et de nos LLM. Chacun le lit en début de session et y ajoute une entrée en fin de session.
-> **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
-> **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
 ### 2026-10-27 · Noé · Chef de projet · Issue #3
 - **Fait** : dépôt public créé, collaborateurs invités, `main` protégée ; issues #1 à #7 créées et assignées avec milestones ; documents de pilotage rédigés dans `docs/` et PR ouverte
