@@ -87,6 +87,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Bloquant / question** : aucun
 - **Prochaine étape** : chaque membre configure son projet Claude / Gem et fait une première session test
 
+
+### 2026-10-28 · Thikana · Responsable dépôt · Issue #2
+- **Fait** : Configuration de l'environnement virtuel et création du `requirements.txt` avec les 8 dépendances directes figées pour assurer la compatibilité multi-OS (ET-01).
+- **Décisions** : aucune
+- **Anomalies** : aucune
+- **Bloquant / question** : aucun
+- **Prochaine étape** : Attendre l'approbation de la relecture pour fusionner la PR dans `main`.
 ### 2026-10-28 · Hafsa · Responsable données · Issue #6
 
 - **Fait** : intégration des justifications détaillées du périmètre (IDF, 2021-2023, gazole).
