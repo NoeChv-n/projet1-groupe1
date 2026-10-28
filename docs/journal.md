@@ -30,6 +30,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-10-28 · Noé · Chef de projet · Issue #7
+- **Fait** : issue reprise de Hafsa ; `src/download.py` écrit et testé (historiques 2021-2023 et flux v2 CSV dans `data/raw/`, lancement `python src/download.py`, ruff OK) ; section Données du README mise à jour (URL, date de téléchargement)
+- **Décisions** : aucune nouvelle (flux v2 en CSV déjà tracé en D-10)
+- **Anomalies** : ANO-01 créée (flux v2 servi tantôt compressé gzip, tantôt en clair)
+- **Bloquant / question** : lecture du flux v2 à fournir avant son exploration (ANO-01) ; XML 2021 de 307 Mo décompressé, risque mémoire sur 8 Go à tester tôt (ET-05)
+- **Prochaine étape** : faire relire la PR #7 par Thikana, puis créer l'issue de lecture et de nettoyage du flux v2
+
 ### 2026-10-28 · Noé · Chef de projet · Issue #17
 - **Fait** : retours du commanditaire archivés (Q-05 validation du cadrage v1, Q-06 format du flux v2) ; questions mises à jour (statuts, seuil QA-1.2, effectifs QA-3, sources QA-4.3) et hypothèses H-1 à H-3 formulées avant calcul ; merge de `main` avec résolution des conflits sur decisions.md et journal.md
 - **Décisions** : D-08 seuil de 5 stations par commune, D-09 écarts en € pour 100 L, D-10 flux v2 en CSV (toutes proposées) → déjà dans decisions.md, à valider en équipe
