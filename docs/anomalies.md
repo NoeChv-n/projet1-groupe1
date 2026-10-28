@@ -30,3 +30,13 @@
 - **Traitement retenu** : conservé / corrigé / imputé / exclu / signalé — avec la justification
 - **Impact sur l'analyse** : indicateurs ou conclusions affectés
 - **Détectée par / date** : Prénom, AAAA-MM-JJ · lien vers la PR
+
+
+
+## ANO-01 · Format variable du flux v2 téléchargé
+- **Colonne(s)** : fichier entier (`data/raw/flux_v2.csv`)
+- **Description** : la même URL data.gouv renvoie tantôt un CSV compressé gzip (3,0 Mo), tantôt un CSV en clair UTF-8 avec BOM (19 Mo). Constaté le 2026-10-28 avec `file`.
+- **Ampleur** : 1 fichier, aléatoire selon le téléchargement
+- **Cause probable** : comportement du serveur de diffusion (compression non systématique)
+- **Traitement** : fichier enregistré sous un nom neutre ; la lecture tente gzip puis bascule sur le texte brut (`gzip.BadGzipFile`), avec `encoding="utf-8-sig"` pour le BOM
+- **Impact** : aucun sur l'analyse si la lecture gère les deux cas ; sans ce traitement, le chargement échoue une fois sur deux
