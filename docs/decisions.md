@@ -80,3 +80,10 @@
 - **Alternatives écartées** : volume d'un plein de poids lourd ou consommation annuelle d'une flotte (nécessite une source externe, soumise à accord écrit du commanditaire, CDC §3).
 - **Statut** : Proposée, à valider en équipe
 
+## D-10 · Format du flux v2 : CSV data.gouv.fr
+- **Date** : 2026-10-28
+- **Décision** : la description des stations est lue depuis la version CSV du flux v2 publiée sur data.gouv.fr ; l'historique annuel reste en XML (imposé, Q-06).
+- **Justification** : format libre pour le flux v2 (Q-06). Même identifiant `id`, même échelle de coordonnées et même code `pop` que l'historique, donc jointure EF-06 directe. Le CSV apporte `Département`, `code_departement` et `Région`, absents de l'historique : la jointure enrichit réellement les données. Lecture avec `pd.read_csv` (vu en cours).
+- **Alternatives écartées** : XML du ministère (structure identique à l'historique, mais la jointure n'ajouterait quasiment aucune information).
+- **Statut** : Proposée, à valider en équipe
+
