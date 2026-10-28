@@ -30,6 +30,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-10-28 · Noé · Chef de projet · Issue #17
+- **Fait** : retours du commanditaire archivés (Q-05 validation du cadrage v1, Q-06 format du flux v2) ; questions mises à jour (statuts, seuil QA-1.2, effectifs QA-3, sources QA-4.3) et hypothèses H-1 à H-3 formulées avant calcul ; merge de `main` avec résolution des conflits sur decisions.md et journal.md
+- **Décisions** : D-08 seuil de 5 stations par commune, D-09 écarts en € pour 100 L, D-10 flux v2 en CSV (toutes proposées) → déjà dans decisions.md, à valider en équipe
+- **Anomalies** : aucune créée — contrôle n° 5 complété (remise 2022, H-3)
+- **Bloquant / question** : D-07 contient des résidus `[cite: …]` et un statut à mettre à jour (Q-06), à signaler à Hafsa
+- **Prochaine étape** : pousser la branche et ouvrir la PR `Closes #17`, relue par Thikana
+
 ### 2026-10-27 · Samuel · Responsable restitution · Issue #4
 - **Fait** : README complété selon l'annexe B (8 sections dans l'ordre) ; contexte, données et équipe rédigés, autres sections en « à compléter »
 - **Décisions** : aucune
