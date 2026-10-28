@@ -64,3 +64,26 @@
   - **Période (2021-2023)** : Indispensable pour voir l'avant-choc (2021), l'année des remises de l'État à la pompe (2022) et la sortie des remises (2023). Ces remises vont créer des ruptures de séries temporelles qu'il faudra tracer.
 - **Alternatives écartées** : Analyser tous les carburants. Écarté car cela introduirait un facteur de confusion lors de la comparaison des prix (exigence EF-08). Se restreindre au gazole garantit une comparaison systématique "à carburant égal".
 - **Statut** : Validée (équipe)
+
+
+## D-08 · Seuil minimal de stations par commune (QA-1.2)
+- **Date** : 2026-10-28
+- **Décision** : une commune n'entre dans le classement de QA-1.2 que si elle compte au moins 5 stations distribuant du gazole sur la période. Paris est traité comme une seule commune (codes postaux 75001 à 75020 regroupés).
+- **Justification** : en dessous de 5 stations, une seule station suffit à déplacer fortement la médiane, et le classement mesurerait alors une station plutôt qu'une commune (demande du commanditaire, Q-05). Le seuil est confirmé après comptage : il doit laisser au moins 10 communes classables pour présenter les 5 moins chères et les 5 plus chères. Le nombre de communes retenues et exclues est indiqué à côté du classement.
+- **Alternatives écartées** : aucun seuil (classement dominé par les communes à une station) ; seuil de 10 (risque d'exclure presque toute la grande couronne, à vérifier au comptage).
+- **Statut** : Proposée, valeur à confirmer après comptage des stations (issue #6)
+
+## D-09 · Écarts exprimés en euros pour un volume de référence
+- **Date** : 2026-10-28
+- **Décision** : en plus des cts/L et du %, chaque écart est exprimé en euros pour 100 litres de gazole.
+- **Justification** : demande du commanditaire (Q-05). Avec 100 L, la conversion est immédiate (1 ct/L = 1 € pour 100 L), ce qui reste lisible par un non-spécialiste ; le résultat se transpose ensuite à n'importe quel volume de flotte.
+- **Alternatives écartées** : volume d'un plein de poids lourd ou consommation annuelle d'une flotte (nécessite une source externe, soumise à accord écrit du commanditaire, CDC §3).
+- **Statut** : Proposée, à valider en équipe
+
+## D-10 · Format du flux v2 : CSV data.gouv.fr
+- **Date** : 2026-10-28
+- **Décision** : la description des stations est lue depuis la version CSV du flux v2 publiée sur data.gouv.fr ; l'historique annuel reste en XML (imposé, Q-06).
+- **Justification** : format libre pour le flux v2 (Q-06). Même identifiant `id`, même échelle de coordonnées et même code `pop` que l'historique, donc jointure EF-06 directe. Le CSV apporte `Département`, `code_departement` et `Région`, absents de l'historique : la jointure enrichit réellement les données. Lecture avec `pd.read_csv` (vu en cours).
+- **Alternatives écartées** : XML du ministère (structure identique à l'historique, mais la jointure n'ajouterait quasiment aucune information).
+- **Statut** : Proposée, à valider en équipe
+

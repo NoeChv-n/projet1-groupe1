@@ -1,34 +1,10 @@
 # Journal de bord
 
-## État actuel
-
-- **Jalon en cours** : J1, lancement (tag v0.1)
-- **Sujet** : n° 10, Prix des carburants
-- **Fait** : sujet attribué, README initial, structure du dépôt en cours (issue #1)
-- **En cours** : issue #1, structure minimale du dépôt (branche `chore/1-structure-depot`)
-- **Bloquant** : aucun
-
-## Entrées
-
-### 2026-10-27 · Thikana · Responsable dépôt · Issue #1
-- **Fait** : arborescence de l'annexe B créée, `.gitignore` écrit (données, .venv, pycache, checkpoints)
-- **Décisions** : ajout de `docs/journal.md`, absent de l'annexe B → à reporter dans decisions.md
-- **Anomalies** : aucune
-- **Bloquant / question** : `.gitkeep` de `data/raw` et `data/processed` pas encore confirmés versionnés (`git ls-files data` vide)
-- **Prochaine étape** : commiter les `.gitkeep`, pousser la branche et ouvrir la PR avec `Closes #1`
-# Journal de bord — Projet 1 · Prix des carburants · Groupe 1
-
-> **À quoi sert ce fichier** : c'est la mémoire commune de l'équipe et de nos LLM. Chacun le lit en début de session et y ajoute une entrée en fin de session.
-> **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
-> **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
-
-## État actuel
-
-_Mis à jour par le chef de projet au début de chaque semaine école et après chaque point à distance. 15 lignes maximum._
+*Mis à jour par le chef de projet au début de chaque semaine école et après chaque point à distance. 15 lignes maximum.*
 
 - **Semaine / jalon** : S44 · J2 Exploration (26 → 30/10) · tag attendu : `v0.2` — **`v0.1` en retard (attendue S41), à poser en priorité**
 - **Prochaine échéance** : tag `v0.1` (issues #1 à #5), puis PC2 (02 → 06/11) : nettoyage terminé, jointure réalisée, maquette papier du tableau de bord
-- **Périmètre retenu** : région [À COMPLÉTER], années [À COMPLÉTER], carburants [À COMPLÉTER] (issue #6, décision D-xx à venir)
+- **Périmètre retenu** : région Ile de france, années 2021-2023, carburants gazole
 - **Questions analytiques** : en cours de rédaction (issue #5), non validées
 
 **Rôles cette semaine**
@@ -49,6 +25,17 @@ _Mis à jour par le chef de projet au début de chaque semaine école et après 
 ## Entrées
 
 _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture ». On garde les ~15 dernières ; les plus anciennes sont déplacées dans `journal-archive.md` à chaque jalon._
+
+> **À quoi sert ce fichier** : c'est la mémoire commune de l'équipe et de nos LLM. Chacun le lit en début de session et y ajoute une entrée en fin de session.
+> **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
+> **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
+
+### 2026-10-28 · Noé · Chef de projet · Issue #17
+- **Fait** : retours du commanditaire archivés (Q-05 validation du cadrage v1, Q-06 format du flux v2) ; questions mises à jour (statuts, seuil QA-1.2, effectifs QA-3, sources QA-4.3) et hypothèses H-1 à H-3 formulées avant calcul ; merge de `main` avec résolution des conflits sur decisions.md et journal.md
+- **Décisions** : D-08 seuil de 5 stations par commune, D-09 écarts en € pour 100 L, D-10 flux v2 en CSV (toutes proposées) → déjà dans decisions.md, à valider en équipe
+- **Anomalies** : aucune créée — contrôle n° 5 complété (remise 2022, H-3)
+- **Bloquant / question** : D-07 contient des résidus `[cite: …]` et un statut à mettre à jour (Q-06), à signaler à Hafsa
+- **Prochaine étape** : pousser la branche et ouvrir la PR `Closes #17`, relue par Thikana
 
 ### 2026-10-27 · Samuel · Responsable restitution · Issue #4
 - **Fait** : README complété selon l'annexe B (8 sections dans l'ordre) ; contexte, données et équipe rédigés, autres sections en « à compléter »
