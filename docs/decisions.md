@@ -54,3 +54,13 @@
 - **Justification** : carburant des poids lourds du commanditaire (fédération de transporteurs routiers, CDC annexe A.10) ; validé par le commanditaire (Q-02). Comparaisons automatiquement à carburant égal (EF-08) ; volume réduit d'environ 70 % (ET-05).
 - **Alternatives écartées** : tous les carburants (hors besoin, plus lourd) ; carburant témoin E10 (non demandé).
 - **Statut** : Validée (commanditaire, Q-02)
+
+## D-07 · Choix du périmètre d'analyse (Issue #6)
+- **Date** : 2026-10-28
+- **Décision** : Région Île-de-France, années 2021 à 2023, le gazole comme unique carburant.
+- **Justification** :
+  - **Carburant (gazole)** : Pertinence métier (le commanditaire est une fédération de transporteurs routiers, annexe A.10)[cite: 19]. Les comparaisons se font "à carburant égal" pour éviter les biais (EF-08)[cite: 9]. Le volume est réduit (environ 1,5 M de relevés sur 5,3 M, soit ~29%), ce qui est adapté pour un PC de 8 Go (ET-05)[cite: 11].
+  - **Région (IDF)** : Permet de compter les stations sur autoroute (condition pour le surcoût, EF-08) et conditionne la viabilité sur 8 Go (ET-05)[cite: 9, 11]. *Limite assumée* : les autoroutes franciliennes sont courtes et très urbaines, le surcoût sera peu généralisable.
+  - **Période (2021-2023)** : Indispensable pour voir l'avant-choc (2021), l'année des remises de l'État à la pompe (2022) et la sortie des remises (2023). Ces remises vont créer des ruptures de séries temporelles qu'il faudra tracer.
+- **Alternatives écartées** : Analyser tous les carburants. Écarté car cela introduirait un facteur de confusion lors de la comparaison des prix (exigence EF-08). Se restreindre au gazole garantit une comparaison systématique "à carburant égal".
+- **Statut** : Validée (équipe)
