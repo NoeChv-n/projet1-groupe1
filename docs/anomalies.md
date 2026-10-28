@@ -3,6 +3,8 @@
 > **Règle** : aucune ligne n'est supprimée ou corrigée sans fiche ici (CDC §8).
 > Une anomalie non traitée est acceptable si elle est documentée et que son impact est énoncé. Une anomalie connue mais tue est un motif de refus en recette.
 
+> **Plages réservées** (pour ne pas écrire au même endroit) : ANO-01 à ANO-09 pour l'historique (Hafsa), ANO-10 et suivantes pour le flux des stations (Thikana). Les anomalies de jointure prennent la suite de la plage flux.
+
 ## Récapitulatif
 
 | ID | Colonne(s) | Résumé | Ampleur | Traitement |
