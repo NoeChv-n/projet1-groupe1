@@ -31,6 +31,11 @@ def prix_median_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
 
     Entrée : sortie de prix_hebdo_par_station(). Responsable : Samuel.
     """
+    median_par_semaine = prix_hebdo.groupby("semaine").agg(
+        prix_median=("prix_hebdo", "median"),
+        nb_stations=(COL_STATION, "nunique"),
+    )
+    return median_par_semaine.reset_index()
 
 def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     """Prix médian par département, écart en cts et en % (QA-1.1).
