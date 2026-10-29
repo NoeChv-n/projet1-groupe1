@@ -37,7 +37,7 @@ def prix_median_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     """
     median_par_semaine = prix_hebdo.groupby("semaine").agg(
         prix_median=("prix_hebdo", "median"),
-        nb_stations=(COL_STATION, "nunique"),
+        nb_stations=("prix_hebdo", "count"),
     )
     return median_par_semaine.reset_index()
 
