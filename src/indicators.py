@@ -1,6 +1,11 @@
 """Calcul des indicateurs de prix (entrées au format D-11)."""
 
 import pandas as pd
+COL_STATION = "id_station"
+COL_DEPARTEMENT = "departement"
+COL_IMPLANTATION = "implantation"
+COL_DATE = "date_releve"
+COL_PRIX = "prix_gazole"
 
 
 def prix_hebdo_par_station(historique: pd.DataFrame) -> pd.DataFrame:
@@ -8,7 +13,18 @@ def prix_hebdo_par_station(historique: pd.DataFrame) -> pd.DataFrame:
 
     Entrée : historique nettoyé (D-11). Responsable : Samuel.
     """
+    historique = historique.copy()
+    historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
 
+    par_station = historique.set_index(COL_DATE).groupby(
+        [COL_STATION, COL_DEPARTEMENT, COL_IMPLANTATION]
+    )
+    prix_hebdo = par_station[COL_PRIX].resample("W").mean()
+    prix_hebdo = prix_hebdo.reset_index()
+    prix_hebdo = prix_hebdo.rename(
+        columns={COL_DATE: "semaine", COL_PRIX: "prix_hebdo"}
+    )
+    return prix_hebdo
 
 def prix_median_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     """Prix médian hebdomadaire de la région, en €/L (QA-4.1).
@@ -16,9 +32,9 @@ def prix_median_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     Entrée : sortie de prix_hebdo_par_station(). Responsable : Samuel.
     """
 
-
 def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     """Prix médian par département, écart en cts et en % (QA-1.1).
 
     Entrée : sortie de prix_hebdo_par_station(). Responsable : Samuel.
     """
+  
