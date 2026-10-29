@@ -65,4 +65,3 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     par_departement["ecart_cts"] = ecart * 100
     par_departement["ecart_pct"] = ecart / moins_cher * 100
     return par_departement.round(2)
-  
