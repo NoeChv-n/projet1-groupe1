@@ -108,3 +108,9 @@
 - **Alternatives écartées** : un notebook unique pour tout le projet (conflits à chaque PR) ; plusieurs notebooks d'analyse (les deux sources doivent être croisées dans la même table).
 - **Statut** : Proposée (Noé), à valider en relecture
 
+## D-13 · Calcul de l'écart de prix entre départements (QA-1.1)
+- **Date** : 2026-10-30
+- **Décision** : pour chaque station, calculer la médiane de ses prix hebdomadaires, puis calculer la médiane de ces valeurs par département ; exprimer l'écart de chaque département en cts/L et en % par rapport au département ayant la médiane la plus basse. Dans `prix_median_hebdo()`, `nb_stations` compte les stations ayant un prix la semaine concernée, pas les stations présentes dans la table.
+- **Justification** : QA-1.1 demande les prix médians par département et l'écart entre le moins cher et le plus cher (`docs/questions.md`). Une médiane par station évite de donner davantage de poids aux stations ayant plus de semaines renseignées. La différence entre la médiane maximale et minimale donne l'écart demandé ; le pourcentage est rapporté au prix du département le moins cher.
+- **Alternatives écartées** : comparer chaque département à la médiane régionale, qui ne répond pas à la comparaison du moins cher au plus cher ; calculer une médiane départementale directement sur toutes les semaines-stations, ce qui surpondérerait les stations ayant davantage de relevés.
+- **Statut** : Proposée, à valider en équipe
