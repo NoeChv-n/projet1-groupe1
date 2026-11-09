@@ -20,12 +20,20 @@ def nettoyer_historique(historique_brut: pd.DataFrame) -> pd.DataFrame:
     """
 
 
-def charger_stations(chemin: str = "data/raw/stations_flux_v2.csv") -> pd.DataFrame:
+def charger_stations(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
     """Lit le flux v2 (.csv ou .csv.gz, compression détectée), Île-de-France.
 
-    Responsable : Thikana (#10).
+    Responsable : Thikana (#22).
     """
+    stations_brutes = pd.read_csv(chemin, sep=";", dtype=str)
 
+    stations_idf = stations_brutes[stations_brutes["code_departement"].isin(DEPARTEMENTS_IDF)]
+
+    colonnes_utiles = ["id", "Code postal", "Ville", "pop", "latitude", "longitude", "code_departement"]
+
+    return stations_idf[colonnes_utiles]
+
+ 
 
 def nettoyer_stations(stations_brutes: pd.DataFrame) -> pd.DataFrame:
     """Applique les traitements des fiches ANO-10 et suivantes, format D-11.
