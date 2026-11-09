@@ -63,3 +63,19 @@
 - **Traitement proposé** : diviser par 100 000 dans `nettoyer_stations()`,
   puis vérifier : latitude entre 48 et 49,2, longitude entre 1,4 et 3,6
 - **Impact sur l'analyse** : cartes et distances faussées si non converties
+
+## ANO-12 · Code postal incohérent avec le département
+- **Colonne(s)** : `Code postal`, `code_departement`
+- **Description** : les 2 premiers chiffres du code postal diffèrent du
+  département pour 4 stations.
+  Exemples : id 78800001, Bezons, code postal 78800, département 95 ;
+  id 94160001, Paris, code postal 94160, département 75.
+- **Ampleur** : 4 lignes sur 831 en Île-de-France (≈ 0,5 %)
+- **Cause probable** : pour 3 cas, découpage postal différent du découpage
+  administratif (à vérifier) ; pour id 94160001 (Paris / 94160),
+  possible erreur de saisie.
+- **Traitement proposé** : conserver les 4 lignes ; utiliser
+  `code_departement` pour tout regroupement par département, jamais les
+  2 premiers chiffres du code postal ; vérifier id 94160001 à la source.
+- **Impact sur l'analyse** : regroupements par département faussés si on
+  se base sur le code postal ; effet limité (4 stations).
