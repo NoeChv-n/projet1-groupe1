@@ -55,9 +55,9 @@
   à raison.
 - **Impact sur l'analyse** : aucun sur le périmètre Île-de-France.
 
-## ANO-11 · Coordonnées stockées en entiers
+## ANO-11 ·  Coordonnées GPS dans une unité non standard (degrés × 100 000)
 - **Colonne(s)** : `latitude`, `longitude`
-- **Description** : valeurs en entiers, ex. latitude 4883600, longitude 235927.
+- **Description** : valeurs en degrés × 100 000, parfois avec décimales, ex. latitude 4883600, longitude 235927.279911.
 - **Ampleur** : 831 lignes sur 831 en Île-de-France (100 %)
 - **Cause probable** : format de la source (degrés × 100 000)
 - **Traitement proposé** : diviser par 100 000 dans `nettoyer_stations()`,
