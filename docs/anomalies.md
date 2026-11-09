@@ -54,3 +54,12 @@
   (76600, 56700, 83150, 83380) sont hors Île-de-France : le filtre les exclut
   à raison.
 - **Impact sur l'analyse** : aucun sur le périmètre Île-de-France.
+
+## ANO-11 · Coordonnées stockées en entiers
+- **Colonne(s)** : `latitude`, `longitude`
+- **Description** : valeurs en entiers, ex. latitude 4883600, longitude 235927.
+- **Ampleur** : 831 lignes sur 831 en Île-de-France (100 %)
+- **Cause probable** : format de la source (degrés × 100 000)
+- **Traitement proposé** : diviser par 100 000 dans `nettoyer_stations()`,
+  puis vérifier : latitude entre 48 et 49,2, longitude entre 1,4 et 3,6
+- **Impact sur l'analyse** : cartes et distances faussées si non converties
