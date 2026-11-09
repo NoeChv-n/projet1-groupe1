@@ -20,12 +20,23 @@ def nettoyer_historique(historique_brut: pd.DataFrame) -> pd.DataFrame:
     """
 
 
-def charger_stations(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
-    """Lit le flux v2 (.csv ou .csv.gz, compression détectée), Île-de-France.
+def lire_flux_v2(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
+    """Lit le flux v2 brut (toutes les stations), en clair ou compressé gzip.
 
     Responsable : Thikana (#22).
     """
-    stations_brutes = pd.read_csv(chemin, sep=";", dtype=str)
+    try:
+        return pd.read_csv(chemin, sep=";", dtype=str)
+    except UnicodeDecodeError:
+        return pd.read_csv(chemin, sep=";", dtype=str, compression="gzip")
+
+
+def charger_stations(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
+    """Lit le flux v2 (clair ou gzip), Île-de-France.
+
+    Responsable : Thikana (#22).
+    """
+    stations_brutes = lire_flux_v2(chemin)
 
     stations_idf = stations_brutes[stations_brutes["code_departement"].isin(DEPARTEMENTS_IDF)]
 
