@@ -42,3 +42,15 @@
 - **Cause probable** : comportement du serveur de diffusion (compression non systématique)
 - **Traitement** : fichier enregistré sous un nom neutre ; la lecture tente gzip puis bascule sur le texte brut (`gzip.BadGzipFile`), avec `encoding="utf-8-sig"` pour le BOM
 - **Impact** : aucun sur l'analyse si la lecture gère les deux cas ; sans ce traitement, le chargement échoue une fois sur deux
+
+
+## ANO-10 · Région, ville et département manquants pour 4 stations
+- **Colonne(s)** : `Région`, `Ville`, `code_departement`
+- **Description** : les trois colonnes sont vides ensemble pour 4 stations.
+  Exemple : id 76600022, Code postal 76600, Région = NaN.
+- **Ampleur** : 4 lignes sur 9 829 (≈ 0,04 %)
+- **Cause probable** : rattachement géographique non renseigné dans la source.
+- **Traitement proposé** : signaler, ne rien corriger. Leurs codes postaux
+  (76600, 56700, 83150, 83380) sont hors Île-de-France : le filtre les exclut
+  à raison.
+- **Impact sur l'analyse** : aucun sur le périmètre Île-de-France.
