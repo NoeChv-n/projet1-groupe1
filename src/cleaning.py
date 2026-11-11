@@ -1,5 +1,7 @@
 """Chargement et nettoyage des données de prix des carburants (contrat : D-11)."""
 
+import gzip
+
 import pandas as pd
 
 # Liste partagée pour que tout le monde filtre le même périmètre (D-07)
@@ -26,9 +28,11 @@ def lire_flux_v2(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
     Responsable : Thikana (#22).
     """
     try:
-        return pd.read_csv(chemin, sep=";", dtype=str)
-    except UnicodeDecodeError:
-        return pd.read_csv(chemin, sep=";", dtype=str, compression="gzip")
+        return pd.read_csv(
+            chemin, sep=";", dtype=str, compression="gzip", encoding="utf-8-sig"
+        )
+    except gzip.BadGzipFile:
+        return pd.read_csv(chemin, sep=";", dtype=str, encoding="utf-8-sig")
 
 
 def charger_stations(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
@@ -38,13 +42,22 @@ def charger_stations(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
     """
     stations_brutes = lire_flux_v2(chemin)
 
-    stations_idf = stations_brutes[stations_brutes["code_departement"].isin(DEPARTEMENTS_IDF)]
+    stations_idf = stations_brutes[
+        stations_brutes["code_departement"].isin(DEPARTEMENTS_IDF)
+    ]
 
-    colonnes_utiles = ["id", "Code postal", "Ville", "pop", "latitude", "longitude", "code_departement"]
+    colonnes_utiles = [
+        "id",
+        "Code postal",
+        "Ville",
+        "pop",
+        "latitude",
+        "longitude",
+        "code_departement",
+    ]
 
     return stations_idf[colonnes_utiles]
 
- 
 
 def nettoyer_stations(stations_brutes: pd.DataFrame) -> pd.DataFrame:
     """Applique les traitements des fiches ANO-10 et suivantes, format D-11.
