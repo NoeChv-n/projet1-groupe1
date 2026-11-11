@@ -14,19 +14,39 @@ def prix_hebdo_par_station(historique: pd.DataFrame) -> pd.DataFrame:
 
     Entrée : historique nettoyé (D-11). Responsable : Samuel.
     Sortie : id_station, departement, implantation, semaine, prix_hebdo (€/L).
+    resample("W") regroupe du lundi au dimanche et date les semaines du dimanche.
     """
     historique = historique.copy()
     historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
 
-    par_station = historique.set_index(COL_DATE).groupby(
-        [COL_STATION, COL_DEPARTEMENT, COL_IMPLANTATION]
+    prix_hebdo = (
+        historique.set_index(COL_DATE)
+        .groupby(COL_STATION)[COL_PRIX]
+        .resample("W")
+        .mean()
+        .reset_index()
+        .rename(columns={COL_DATE: "semaine", COL_PRIX: "prix_hebdo"})
     )
-    prix_hebdo = par_station[COL_PRIX].resample("W").mean()
-    prix_hebdo = prix_hebdo.reset_index()
-    prix_hebdo = prix_hebdo.rename(
-        columns={COL_DATE: "semaine", COL_PRIX: "prix_hebdo"}
+
+    metadonnees = (
+        historique.sort_values(COL_DATE, kind="stable")
+        .drop_duplicates([COL_STATION, COL_DATE], keep="last")
+        [[COL_STATION, COL_DATE, COL_DEPARTEMENT, COL_IMPLANTATION]]
     )
-    return prix_hebdo
+    prix_hebdo = pd.merge_asof(
+        prix_hebdo.sort_values("semaine"),
+        metadonnees.sort_values(COL_DATE),
+        left_on="semaine",
+        right_on=COL_DATE,
+        by=COL_STATION,
+        direction="backward",
+    )
+    return (
+        prix_hebdo.drop(columns=COL_DATE)
+        .sort_values([COL_STATION, "semaine"])
+        [[COL_STATION, COL_DEPARTEMENT, COL_IMPLANTATION, "semaine", "prix_hebdo"]]
+        .reset_index(drop=True)
+    )
 
 
 def prix_median_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
@@ -64,4 +84,8 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     ecart = par_departement["prix_median"] - moins_cher
     par_departement["ecart_cts"] = ecart * 100
     par_departement["ecart_pct"] = ecart / moins_cher * 100
-    return par_departement.round(2)
+    par_departement["prix_median"] = par_departement["prix_median"].round(3)
+    par_departement[["ecart_cts", "ecart_pct"]] = par_departement[
+        ["ecart_cts", "ecart_pct"]
+    ].round(2)
+    return par_departement
