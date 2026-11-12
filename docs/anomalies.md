@@ -42,3 +42,22 @@
 - **Cause probable** : comportement du serveur de diffusion (compression non systématique)
 - **Traitement** : fichier enregistré sous un nom neutre ; la lecture tente gzip puis bascule sur le texte brut (`gzip.BadGzipFile`), avec `encoding="utf-8-sig"` pour le BOM
 - **Impact** : aucun sur l'analyse si la lecture gère les deux cas ; sans ce traitement, le chargement échoue une fois sur deux
+
+
+
+
+## ANO-02 · Prix du gazole anormalement bas (2023)
+- **Colonne(s)** : `prix`
+- **Description** : Présence de prix impossibles sur le marché (ex: 0.100 €/L et 0.190 €/L à Courbevoie). Détecté lors de l'exploration EF-03 via la règle 1,5 x IQR (sous la limite basse de 1.56 €).
+- **Ampleur** : Fait partie des 680 relevés hors domaine détectés sur 175 351 lignes.
+- **Cause probable** : Erreurs de frappe ou de placement de virgule lors de la saisie par la station.
+- **Traitement** : Remplacer ces valeurs par du vide (`NaN`) ou appliquer une correction si l'erreur de virgule est évidente.
+- **Impact** : Fausse la moyenne à la baisse si ce n'est pas nettoyé.
+
+## ANO-03 · Prix du gazole anormalement hauts (2023)
+- **Colonne(s)** : `prix`
+- **Description** : Présence de prix extrêmes (ex: 7.760 €/L et 7.719 €/L à Bonneuil-sur-Marne). Détecté via la règle 1,5 x IQR (au-dessus de la limite haute de 2.19 €).
+- **Ampleur** : Fait partie des 680 relevés hors domaine détectés sur l'année 2023.
+- **Cause probable** : Erreur de saisie.
+- **Traitement** : Remplacer par `NaN`.
+- **Impact** : Tire la moyenne artificiellement vers le haut.
