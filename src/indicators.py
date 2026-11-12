@@ -28,25 +28,22 @@ def prix_hebdo_par_station(historique: pd.DataFrame) -> pd.DataFrame:
         .rename(columns={COL_DATE: "semaine", COL_PRIX: "prix_hebdo"})
     )
 
-    metadonnees = (
-        historique.sort_values(COL_DATE, kind="stable")
-        .drop_duplicates([COL_STATION, COL_DATE], keep="last")
-        [[COL_STATION, COL_DATE, COL_DEPARTEMENT, COL_IMPLANTATION]]
+    metadonnees = historique.assign(
+        semaine=historique[COL_DATE].dt.to_period("W-SUN").dt.end_time.dt.normalize()
     )
+    metadonnees = metadonnees.sort_values(COL_DATE, kind="stable").drop_duplicates(
+        [COL_STATION, "semaine"], keep="last"
+    )[[COL_STATION, "semaine", COL_DEPARTEMENT, COL_IMPLANTATION]]
     prix_hebdo = pd.merge_asof(
         prix_hebdo.sort_values("semaine"),
-        metadonnees.sort_values(COL_DATE),
-        left_on="semaine",
-        right_on=COL_DATE,
+        metadonnees.sort_values("semaine"),
+        on="semaine",
         by=COL_STATION,
         direction="backward",
     )
-    return (
-        prix_hebdo.drop(columns=COL_DATE)
-        .sort_values([COL_STATION, "semaine"])
-        [[COL_STATION, COL_DEPARTEMENT, COL_IMPLANTATION, "semaine", "prix_hebdo"]]
-        .reset_index(drop=True)
-    )
+    return prix_hebdo.sort_values([COL_STATION, "semaine"])[
+        [COL_STATION, COL_DEPARTEMENT, COL_IMPLANTATION, "semaine", "prix_hebdo"]
+    ].reset_index(drop=True)
 
 
 def prix_median_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
