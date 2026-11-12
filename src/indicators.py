@@ -63,6 +63,9 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     """Prix médian par département, écart en cts et en % (QA-1.1).
 
     Entrée : sortie de prix_hebdo_par_station(). Responsable : Samuel.
+
+    """
+
     Écart de chaque département au moins cher ; le plus grand écart de la
     colonne est l'écart entre le moins cher et le plus cher.
     """
