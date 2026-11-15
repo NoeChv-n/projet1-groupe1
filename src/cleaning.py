@@ -14,7 +14,7 @@ def charger_historique(annee: int) -> pd.DataFrame:
 
     Responsable : Hafsa (#9).
     """
-    # Modification : Chemins pour lire depuis le fichier zip téléchargé
+
     chemin_zip = f"data/raw/historique_{annee}.zip"
     nom_xml = f"PrixCarburants_annuel_{annee}.xml"
     idf_tuple = tuple(DEPARTEMENTS_IDF)
@@ -34,7 +34,7 @@ def charger_historique(annee: int) -> pd.DataFrame:
                     if cp.startswith(idf_tuple):
                         id_pdv = elem.get("id")
                         ville = elem.findtext("ville")
-                        # Ajout de l'attribut pop demandé pour la colonne implantation (PR #30)
+
                         pop = elem.get("pop")
 
                         # On parcourt les sous-balises prix de cette station
@@ -47,12 +47,9 @@ def charger_historique(annee: int) -> pd.DataFrame:
                                     {
                                         "id_pdv": id_pdv,
                                         "cp": cp.zfill(5),
-                                        "departement": cp[
-                                            :2
-                                        ],  # Ajout de la colonne département
+                                        "departement": cp[:2],
                                         "ville": ville,
-                                        "pop": pop,  # Ajout de la colonne pop
-                                        # La ligne "carburant" a été retirée comme demandé
+                                        "pop": pop,
                                         "date": prix.get("maj"),
                                         "prix": prix.get("valeur"),
                                     }
