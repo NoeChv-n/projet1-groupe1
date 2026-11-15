@@ -30,6 +30,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-10 · Samuel · Responsable restitution · Issue #11
+- **Fait** : test de prix_hebdo_par_station, prix_median_hebdo et prix_median_par_departement sur les données brutes 2023 (IDF, gazole : 175 351 relevés, 831 stations)
+- **Décisions** : traitement de la 1re semaine partielle (01/01/2023) et des semaines vides à proposer au chef → à reporter dans decisions.md
+- **Anomalies** : aucune créée ; 25 prix hors 1 à 3 €/L, 831 stations sur 1 640, semaines vides à signaler à Hafsa sur l'issue #9
+- **Bloquant / question** : sens d'une semaine sans relevé (donnée manquante ou prix inchangé) à vérifier dans la documentation du producteur ; notebooks/01_exploration.ipynb vide fait échouer ruff
+- **Prochaine étape** : choix de l’outil de tableau de bord
+
 ### 2026-10-28 · Noé · Chef de projet · Issue #7
 - **Fait** : issue reprise de Hafsa ; `src/download.py` écrit et testé (historiques 2021-2023 et flux v2 CSV dans `data/raw/`, lancement `python src/download.py`, ruff OK) ; section Données du README mise à jour (URL, date de téléchargement)
 - **Décisions** : aucune nouvelle (flux v2 en CSV déjà tracé en D-10)
@@ -96,3 +103,10 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Bloquant / question** : aucun
 - **Prochaine étape** : pousser la branche sur GitHub puis calculer les effectifs de l'IDF avec Pandas.
 - **Prochaine étape** : chaque membre configure son projet Claude / Gem et fait une première session test
+
+### 2026-11-09 · Thikana · Responsable dépôt · Issue #22
+- **Fait** : charger_stations() et lire_flux_v2() (flux en clair ou gzip) dans src/cleaning.py ; notebook 01_exploration_stations.ipynb (profil EF-02, contrôles, 831 stations en IDF dont 38 d'autoroute) ; historique 2021 relu : 838 stations IDF sur 1 607 absentes du flux (≈ 52 %)
+- **Décisions** : lecture du flux v2 en clair ou gzip dans une fonction dédiée ; ajout du dossier parent au chemin d'import pour appeler src depuis notebooks/ (hors cours) → à reporter dans decisions.md
+- **Anomalies** : ANO-10 à ANO-14 créées (région manquante, coordonnées en degrés × 100 000, code postal incohérent, stations absentes du flux, pop = N dans l'historique)
+- **Bloquant / question** : historique_2021.zip était incomplet et le flux v2 servi en gzip (ANO-01),   52 % d'absents en IDF à discuter pour la jointure EF-06
+- **Prochaine étape** : pousser la branche et ouvrir la PR (Closes #22) avec un relecteur nommé
