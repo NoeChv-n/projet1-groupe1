@@ -7,9 +7,10 @@
 
 ## Récapitulatif
 
-| ID | Colonne(s) | Résumé | Ampleur | Traitement |
-|---|---|---|---|---|
-| — | — | Aucune anomalie consignée pour l'instant | — | — |
+| ID     | Colonne(s) | Résumé                                   | Ampleur               | Traitement          |
+| ------ | ---------- | ---------------------------------------- | --------------------- | ------------------- |
+| ANO-02 | `prix`     | Prix du gazole anormalement bas (2023)   | 680 relevés           | Remplacer par `NaN` |
+| ANO-03 | `prix`     | Prix du gazole anormalement hauts (2023) | (inclus dans les 680) | Remplacer par `NaN` |
 
 ## Contrôles minimaux (CDC §8)
 
@@ -25,6 +26,7 @@
 ## Modèle de fiche (à copier pour chaque anomalie)
 
 ### ANO-xx · Titre court
+
 - **Colonne(s) concernée(s)** : nom exact dans la source
 - **Description** : ce qui est observé, avec un exemple de valeur
 - **Ampleur** : nombre de lignes et part du total (%)
@@ -33,9 +35,8 @@
 - **Impact sur l'analyse** : indicateurs ou conclusions affectés
 - **Détectée par / date** : Prénom, AAAA-MM-JJ · lien vers la PR
 
-
-
 ## ANO-01 · Format variable du flux v2 téléchargé
+
 - **Colonne(s)** : fichier entier (`data/raw/flux_v2.csv`)
 - **Description** : la même URL data.gouv renvoie tantôt un CSV compressé gzip (3,0 Mo), tantôt un CSV en clair UTF-8 avec BOM (19 Mo). Constaté le 2026-10-28 avec `file`.
 - **Ampleur** : 1 fichier, aléatoire selon le téléchargement
@@ -43,19 +44,38 @@
 - **Traitement** : fichier enregistré sous un nom neutre ; la lecture tente gzip puis bascule sur le texte brut (`gzip.BadGzipFile`), avec `encoding="utf-8-sig"` pour le BOM
 - **Impact** : aucun sur l'analyse si la lecture gère les deux cas ; sans ce traitement, le chargement échoue une fois sur deux
 
+## ANO-02 · Prix du gazole anormalement bas (2023)
+
+- **Colonne(s)** : `prix`
+- **Description** : Présence de prix impossibles sur le marché (seuil métier : prix < 1 €, dont 0.100 € et 0.190 €).
+- **Ampleur** : 22 relevés sur 175 351 (soit ~0,01 %).
+- **Cause probable** : Erreurs de frappe ou de placement de virgule lors de la saisie par la station.
+- **Traitement** : Remplacer par du vide (`NaN`) les valeurs strictement inférieures à 1 €.
+- **Impact** : Fausse la moyenne à la baisse si ce n'est pas nettoyé.
+
+## ANO-03 · Prix du gazole anormalement hauts (2023)
+
+- **Colonne(s)** : `prix`
+- **Description** : Présence de prix impossibles (seuil métier : > 3 €, dont 7.76 €) et de prix très hauts mais plausibles liés au pic de septembre-octobre 2023 (entre 2,19 € et 2,62 €).
+- **Ampleur** : 634 relevés au total (3 relevés impossibles et 631 relevés plausibles) sur 175 351 (soit ~0,36 %).
+- **Cause probable** : Erreur de saisie pour les prix > 3 €. Contexte économique réel pour les prix entre 2,19 € et 2,62 € (majoritairement Paris et autoroutes).
+- **Traitement** : Remplacer par du vide (`NaN`) les valeurs strictement supérieures à 3 €. Conserver les prix compris entre 2,19 € et 2,62 €.
+- **Impact** : Supprimer les valeurs entre 2,19 € et 2,62 € fausserait les analyses sur Paris et les autoroutes (H-1 et H-2).
 
 ## ANO-10 · Région, ville et département manquants pour 4 stations
+
 - **Colonne(s)** : `Région`, `Ville`, `code_departement`
 - **Description** : les trois colonnes sont vides ensemble pour 4 stations.
   Exemple : id 76600022, Code postal 76600, Région = NaN.
-- **Ampleur** :  4 lignes sur 9 826 (≈ 0,04 %)
+- **Ampleur** : 4 lignes sur 9 826 (≈ 0,04 %)
 - **Cause probable** : rattachement géographique non renseigné dans la source.
 - **Traitement proposé** : signaler, ne rien corriger. Leurs codes postaux
   (76600, 56700, 83150, 83380) sont hors Île-de-France : le filtre les exclut
   à raison.
 - **Impact sur l'analyse** : aucun sur le périmètre Île-de-France.
 
-## ANO-11 ·  Coordonnées GPS dans une unité non standard (degrés × 100 000)
+## ANO-11 · Coordonnées GPS dans une unité non standard (degrés × 100 000)
+
 - **Colonne(s)** : `latitude`, `longitude`
 - **Description** : valeurs en degrés × 100 000, parfois avec décimales, ex. latitude 4883600, longitude 235927.279911.
 - **Ampleur** : 831 lignes sur 831 en Île-de-France (100 %)
@@ -65,6 +85,7 @@
 - **Impact sur l'analyse** : cartes et distances faussées si non converties
 
 ## ANO-12 · Code postal incohérent avec le département
+
 - **Colonne(s)** : `Code postal`, `code_departement`
 - **Description** : les 2 premiers chiffres du code postal diffèrent du
   département pour 4 stations.
@@ -81,6 +102,7 @@
   se base sur le code postal ; effet limité (4 stations).
 
   ## ANO-13 · Stations de l'historique 2021 absentes du flux actuel
+
 - **Colonne(s)** : `id` (historique 2021 et flux v2)
 - **Description** : des stations de l'historique 2021 n'ont plus de ligne dans le flux v2 du 09/11/2026. Exemple : id ... (à compléter avec absents_idf.head()).
 - **Ampleur** : en Île-de-France, 838 lignes sur 1 607 (≈ 52 %), dont 798 en route et 40 en autoroute. En France, 5 016 sur 13 386 (≈ 37 %).
@@ -89,6 +111,7 @@
 - **Impact sur l'analyse** : ces stations n'ont ni ville ni département officiels. Leur type de route et leur code postal viennent de l'historique. Le périmètre Île-de-France est estimé par les 2 premiers chiffres du code postal (voir ANO-12), donc le chiffre est un ordre de grandeur. Seule l'année 2021 est examinée, pas 2022 ni 2023.
 
 ## ANO-14 · Valeur de pop hors domaine dans l'historique 2021
+
 - **Colonne(s)** : `pop`
 - **Description** : `pop` vaut `N` pour 2 stations alors que le flux n'a que `R` et `A`. Exemples : id 13500010 (code postal 13500), id 95320005 (code postal 95320).
 - **Ampleur** : 2 lignes sur 13 386 (≈ 0,01 %).
