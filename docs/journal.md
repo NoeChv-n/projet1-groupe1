@@ -1,6 +1,6 @@
 # Journal de bord
 
-*Mis à jour par le chef de projet au début de chaque semaine école et après chaque point à distance. 15 lignes maximum.*
+_Mis à jour par le chef de projet au début de chaque semaine école et après chaque point à distance. 15 lignes maximum._
 
 - **Semaine / jalon** : S44 · J2 Exploration (26 → 30/10) · tag attendu : `v0.2` — **`v0.1` en retard (attendue S41), à poser en priorité**
 - **Prochaine échéance** : tag `v0.1` (issues #1 à #5), puis PC2 (02 → 06/11) : nettoyage terminé, jointure réalisée, maquette papier du tableau de bord
@@ -31,6 +31,7 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
 ### 2026-11-10 · Samuel · Responsable restitution · Issue #11
+
 - **Fait** : test de prix_hebdo_par_station, prix_median_hebdo et prix_median_par_departement sur les données brutes 2023 (IDF, gazole : 175 351 relevés, 831 stations)
 - **Décisions** : traitement de la 1re semaine partielle (01/01/2023) et des semaines vides à proposer au chef → à reporter dans decisions.md
 - **Anomalies** : aucune créée ; 25 prix hors 1 à 3 €/L, 831 stations sur 1 640, semaines vides à signaler à Hafsa sur l'issue #9
@@ -38,6 +39,7 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Prochaine étape** : choix de l’outil de tableau de bord
 
 ### 2026-10-28 · Noé · Chef de projet · Issue #7
+
 - **Fait** : issue reprise de Hafsa ; `src/download.py` écrit et testé (historiques 2021-2023 et flux v2 CSV dans `data/raw/`, lancement `python src/download.py`, ruff OK) ; section Données du README mise à jour (URL, date de téléchargement)
 - **Décisions** : aucune nouvelle (flux v2 en CSV déjà tracé en D-10)
 - **Anomalies** : ANO-01 créée (flux v2 servi tantôt compressé gzip, tantôt en clair)
@@ -45,6 +47,7 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Prochaine étape** : faire relire la PR #7 par Thikana, puis créer l'issue de lecture et de nettoyage du flux v2
 
 ### 2026-10-28 · Noé · Chef de projet · Issue #17
+
 - **Fait** : retours du commanditaire archivés (Q-05 validation du cadrage v1, Q-06 format du flux v2) ; questions mises à jour (statuts, seuil QA-1.2, effectifs QA-3, sources QA-4.3) et hypothèses H-1 à H-3 formulées avant calcul ; merge de `main` avec résolution des conflits sur decisions.md et journal.md
 - **Décisions** : D-08 seuil de 5 stations par commune, D-09 écarts en € pour 100 L, D-10 flux v2 en CSV (toutes proposées) → déjà dans decisions.md, à valider en équipe
 - **Anomalies** : aucune créée — contrôle n° 5 complété (remise 2022, H-3)
@@ -52,11 +55,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Prochaine étape** : pousser la branche et ouvrir la PR `Closes #17`, relue par Thikana
 
 ### 2026-10-27 · Samuel · Responsable restitution · Issue #4
+
 - **Fait** : README complété selon l'annexe B (8 sections dans l'ordre) ; contexte, données et équipe rédigés, autres sections en « à compléter »
 - **Décisions** : aucune
 - **Anomalies** : aucune
 - **Bloquant / question** : format du flux v2, date de téléchargement, dernière mise à jour des données et périmètre à confirmer avec Hafsa (#6) ; questions analytiques en attente (#5)
 - **Prochaine étape** : faire relire la PR par Thikana
+
 ### 2026-10-27 · Noé · Chef de projet · Issue #5
 
 - **Fait** : questions analytiques v1 rédigées (question principale + QA-1 à QA-4, 3 sous-questions chacune, reliées aux colonnes XML) ; exploration rapide du flux v2 et de l'historique 2025 (structure, volumes, stations autoroute par région) ; brouillons postés sur #5 et #6
@@ -88,13 +93,14 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Bloquant / question** : aucun
 - **Prochaine étape** : chaque membre configure son projet Claude / Gem et fait une première session test
 
-
 ### 2026-10-28 · Thikana · Responsable dépôt · Issue #2
+
 - **Fait** : Configuration de l'environnement virtuel et création du `requirements.txt` avec les 8 dépendances directes figées pour assurer la compatibilité multi-OS (ET-01).
 - **Décisions** : aucune
 - **Anomalies** : aucune
 - **Bloquant / question** : aucun
 - **Prochaine étape** : Attendre l'approbation de la relecture pour fusionner la PR dans `main`.
+
 ### 2026-10-28 · Hafsa · Responsable données · Issue #6
 
 - **Fait** : intégration des justifications détaillées du périmètre (IDF, 2021-2023, gazole).
@@ -105,8 +111,17 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Prochaine étape** : chaque membre configure son projet Claude / Gem et fait une première session test
 
 ### 2026-11-09 · Thikana · Responsable dépôt · Issue #22
+
 - **Fait** : charger_stations() et lire_flux_v2() (flux en clair ou gzip) dans src/cleaning.py ; notebook 01_exploration_stations.ipynb (profil EF-02, contrôles, 831 stations en IDF dont 38 d'autoroute) ; historique 2021 relu : 838 stations IDF sur 1 607 absentes du flux (≈ 52 %)
 - **Décisions** : lecture du flux v2 en clair ou gzip dans une fonction dédiée ; ajout du dossier parent au chemin d'import pour appeler src depuis notebooks/ (hors cours) → à reporter dans decisions.md
 - **Anomalies** : ANO-10 à ANO-14 créées (région manquante, coordonnées en degrés × 100 000, code postal incohérent, stations absentes du flux, pop = N dans l'historique)
-- **Bloquant / question** : historique_2021.zip était incomplet et le flux v2 servi en gzip (ANO-01),   52 % d'absents en IDF à discuter pour la jointure EF-06
+- **Bloquant / question** : historique_2021.zip était incomplet et le flux v2 servi en gzip (ANO-01), 52 % d'absents en IDF à discuter pour la jointure EF-06
 - **Prochaine étape** : pousser la branche et ouvrir la PR (Closes #22) avec un relecteur nommé
+
+- ### 2026-11-16 · Hafsa · Responsable données · Issue #21
+
+- **Fait** : résolution des conflits Git sur `indicators.py`, nettoyage du code (`cleaning.py`) et du notebook, et correction de la documentation des anomalies suite à la review.
+- **Décisions** : définition de seuils métier pour le nettoyage des prix (ANO-02 : < 1 € remplacés par NaN ; ANO-03 : > 3 € remplacés par NaN, maintien des pics réels à 2,19-2,62 €).
+- **Anomalies** : mise à jour des fiches ANO-02 et ANO-03 avec les nouvelles règles métier.
+- **Bloquant / question** : aucun
+- **Prochaine étape** : pousser les corrections sur GitHub pour le merge final.

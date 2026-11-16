@@ -47,20 +47,20 @@
 ## ANO-02 · Prix du gazole anormalement bas (2023)
 
 - **Colonne(s)** : `prix`
-- **Description** : Présence de prix impossibles sur le marché (ex: 0.100 €/L et 0.190 €/L à Courbevoie). Détecté lors de l'exploration EF-03 via la règle 1,5 x IQR (sous la limite basse de 1.56 €).
-- **Ampleur** : Fait partie des 680 relevés hors domaine détectés sur 175 351 lignes.
+- **Description** : Présence de prix impossibles sur le marché (seuil métier : prix < 1 €, dont 0.100 € et 0.190 €).
+- **Ampleur** : 22 relevés sur 175 351 (soit ~0,01 %).
 - **Cause probable** : Erreurs de frappe ou de placement de virgule lors de la saisie par la station.
-- **Traitement** : Remplacer ces valeurs par du vide (`NaN`).
+- **Traitement** : Remplacer par du vide (`NaN`) les valeurs strictement inférieures à 1 €.
 - **Impact** : Fausse la moyenne à la baisse si ce n'est pas nettoyé.
 
 ## ANO-03 · Prix du gazole anormalement hauts (2023)
 
 - **Colonne(s)** : `prix`
-- **Description** : Présence de prix extrêmes (ex: 7.760 €/L et 7.719 €/L à Bonneuil-sur-Marne). Détecté via la règle 1,5 x IQR (au-dessus de la limite haute de 2.19 €).
-- **Ampleur** : Fait partie des 680 relevés hors domaine détectés sur l'année 2023.
-- **Cause probable** : Erreur de saisie.
-- **Traitement** : Remplacer par `NaN`.
-- **Impact** : Tire la moyenne artificiellement vers le haut.
+- **Description** : Présence de prix impossibles (seuil métier : > 3 €, dont 7.76 €) et de prix très hauts mais plausibles liés au pic de septembre-octobre 2023 (entre 2,19 € et 2,62 €).
+- **Ampleur** : 634 relevés au total (3 relevés impossibles et 631 relevés plausibles) sur 175 351 (soit ~0,36 %).
+- **Cause probable** : Erreur de saisie pour les prix > 3 €. Contexte économique réel pour les prix entre 2,19 € et 2,62 € (majoritairement Paris et autoroutes).
+- **Traitement** : Remplacer par du vide (`NaN`) les valeurs strictement supérieures à 3 €. Conserver les prix compris entre 2,19 € et 2,62 €.
+- **Impact** : Supprimer les valeurs entre 2,19 € et 2,62 € fausserait les analyses sur Paris et les autoroutes (H-1 et H-2).
 
 ## ANO-10 · Région, ville et département manquants pour 4 stations
 

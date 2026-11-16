@@ -2,7 +2,7 @@
 
 
 import xml.etree.ElementTree as ET
-import zipfile  # Ajout de l'import pour lire les fichiers .zip
+import zipfile  
 import gzip
 
 import pandas as pd
