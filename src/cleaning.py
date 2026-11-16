@@ -112,5 +112,36 @@ def charger_stations(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
 def nettoyer_stations(stations_brutes: pd.DataFrame) -> pd.DataFrame:
     """Applique les traitements des fiches ANO-10 et suivantes, format D-11.
 
-    Responsable : Noé (#15).
+    Responsable : Noé (#27).
     """
+    # Nouvelle table aux noms du contrat D-11, identiques à l'historique pour la jointure EF-06.
+    # La table brute n'est pas modifiée, ce qui permet de comparer avant/après dans le notebook
+    stations = pd.DataFrame({
+        "id_station": stations_brutes["id"],
+        "code_postal": stations_brutes["Code postal"],
+        # Département officiel, jamais les 2 premiers chiffres du code postal (ANO-12)
+        "departement": stations_brutes["code_departement"],
+        "ville": stations_brutes["Ville"],
+        "implantation": stations_brutes["pop"],
+        "latitude": stations_brutes["latitude"],
+        "longitude": stations_brutes["longitude"],
+    })
+
+    # Les coordonnées sont stockées en degrés × 100 000 (ANO-11) :
+    # on les remet en degrés pour les cartes et les distances
+    stations["latitude"] = pd.to_numeric(stations["latitude"], errors="coerce") / 100000
+    stations["longitude"] = pd.to_numeric(stations["longitude"], errors="coerce") / 100000
+
+    # Garde-fous : le flux change à chaque téléchargement, on s'arrête si un cas
+    # non prévu par les fiches ANO apparaît (une station décrite deux fois fausserait la jointure)
+    assert stations["id_station"].duplicated().sum() == 0, "id de station en double"
+
+    # Le flux ne doit contenir que R (route) et A (autoroute) ; voir ANO-14 pour l'historique
+    implantation_connue = stations[stations["implantation"].isin(["R", "A"])]
+    assert len(implantation_connue) == len(stations), "valeur de pop inconnue"
+
+    # Un code postal de moins de 5 caractères a perdu son zéro initial
+    code_postal_valide = stations[stations["code_postal"].str.len() == 5]
+    assert len(code_postal_valide) == len(stations), "code postal mal formé"
+
+    return stations
