@@ -114,3 +114,10 @@
 - **Justification** : QA-1.1 demande les prix médians par département et l'écart entre le moins cher et le plus cher (`docs/questions.md`). Une médiane par station évite de donner davantage de poids aux stations ayant plus de semaines renseignées. La différence entre la médiane maximale et minimale donne l'écart demandé ; le pourcentage est rapporté au prix du département le moins cher.
 - **Alternatives écartées** : comparer chaque département à la médiane régionale, qui ne répond pas à la comparaison du moins cher au plus cher ; calculer une médiane départementale directement sur toutes les semaines-stations, ce qui surpondérerait les stations ayant davantage de relevés.
 - **Statut** : Proposée, à valider en équipe
+
+## D-14 · Pose tardive des tags v0.1 et v0.2
+- **Date** : 2026-11-16
+- **Décision** : `v0.1` est posé sur le merge de la PR #18 et `v0.2` sur celui de la PR #33, tous deux le 16/11.
+- **Justification** : GIT-06 impose un tag par jalon ; on tague le premier état de `main` qui contient les livrables du jalon, sans réécrire l'historique.
+- **Alternatives écartées** : ne pas poser les tags manqués (exigence non remplie) ; les poser sur `main` actuel (ne reflète pas l'état au jalon).
+- **Statut** : Proposée (Noé), à valider en équipe
