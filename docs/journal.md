@@ -30,6 +30,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-16 · Noé · Chef de projet · Issue #27
+- **Fait** : `nettoyer_stations()` écrite dans `src/cleaning.py` (colonnes D-11, coordonnées converties en degrés, contrôles doublons / pop / code postal) ; notebook `02_nettoyage_stations` avec bilan 833 → 833 lignes et Parquet `stations_idf` ; fiches ANO-10 à ANO-14, récapitulatif et contrôles 1 à 3 complétés
+- **Décisions** : aucune (contrat D-11 appliqué tel quel)
+- **Anomalies** : ANO-10, 11, 12 traitées ; ANO-13 et 14 renvoyées à la jointure et à `nettoyer_historique()` (#14)
+- **Bloquant / question** : vérifier que `charger_historique()` présente dans la branche vient de `main` ; ruff signale I001, SIM117 et E501 hors de ma fonction (à transmettre à Hafsa et Thikana) ; station 94160001 hors du regroupement Paris de D-08
+- **Prochaine étape** : ouvrir la PR `Closes #27` et créer l'issue de jointure citant ANO-12 et ANO-13
+
 ### 2026-11-16 · Noé · Chef de projet · Suivi PR #31
 
 - **Fait** : tableau récapitulatif de anomalies.md aligné sur les fiches ANO-02/03 ; ampleur d'ANO-03 corrigée (631 = 3 + 628) ; entrée de journal du 16/11 replacée en haut ; README pointé vers 01_exploration_historique.ipynb ; cleaning.py formaté avec ruff
