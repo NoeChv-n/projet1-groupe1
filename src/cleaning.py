@@ -1,8 +1,8 @@
 """Chargement et nettoyage des données de prix des carburants (contrat : D-11)."""
 
+import gzip
 import xml.etree.ElementTree as ET
 import zipfile
-import gzip
 
 import pandas as pd
 
@@ -23,41 +23,40 @@ def charger_historique(annee: int) -> pd.DataFrame:
     donnees = []
 
     # iterparse lit le gros fichier petit à petit directement depuis le zip
-    with zipfile.ZipFile(chemin_zip) as archive:
-        with archive.open(nom_xml) as fichier:
-            context = ET.iterparse(fichier, events=("end",))
+    with zipfile.ZipFile(chemin_zip) as archive, archive.open(nom_xml) as fichier:
+        context = ET.iterparse(fichier, events=("end",))
 
-            for event, elem in context:
-                if elem.tag == "pdv":
-                    cp = elem.get("cp", "")
+        for event, elem in context:
+            if elem.tag == "pdv":
+                cp = elem.get("cp", "")
 
-                    # 1er Filtre : On vérifie si c'est en Île-de-France
-                    if cp.startswith(idf_tuple):
-                        id_pdv = elem.get("id")
-                        ville = elem.findtext("ville")
+                # 1er Filtre : On vérifie si c'est en Île-de-France
+                if cp.startswith(idf_tuple):
+                    id_pdv = elem.get("id")
+                    ville = elem.findtext("ville")
 
-                        pop = elem.get("pop")
+                    pop = elem.get("pop")
 
-                        # On parcourt les sous-balises prix de cette station
-                        for prix in elem.findall("prix"):
-                            nom_carburant = prix.get("nom")
+                    # On parcourt les sous-balises prix de cette station
+                    for prix in elem.findall("prix"):
+                        nom_carburant = prix.get("nom")
 
-                            # 2ème Filtre (D-06 / D-07) : Uniquement le Gazole
-                            if nom_carburant == "Gazole":
-                                donnees.append(
-                                    {
-                                        "id_pdv": id_pdv,
-                                        "cp": cp.zfill(5),
-                                        "departement": cp[:2],
-                                        "ville": ville,
-                                        "pop": pop,
-                                        "date": prix.get("maj"),
-                                        "prix": prix.get("valeur"),
-                                    }
-                                )
+                        # 2ème Filtre (D-06 / D-07) : Uniquement le Gazole
+                        if nom_carburant == "Gazole":
+                            donnees.append(
+                                {
+                                    "id_pdv": id_pdv,
+                                    "cp": cp.zfill(5),
+                                    "departement": cp[:2],
+                                    "ville": ville,
+                                    "pop": pop,
+                                    "date": prix.get("maj"),
+                                    "prix": prix.get("valeur"),
+                                }
+                            )
 
-                    # Très important : on efface l'élément de la mémoire après l'avoir lu
-                    elem.clear()
+                # Très important : on efface l'élément de la mémoire après l'avoir lu
+                elem.clear()
 
     # On transforme notre liste en DataFrame Pandas
     df_idf = pd.DataFrame(donnees)
