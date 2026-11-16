@@ -30,6 +30,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-15 · Noé · Chef de projet · Issue #25
+- **Fait** : hypothèses H-1 à H-3 complétées dans questions.md (indicateur, méthode de comparaison descriptive, statut « Formulée ») ; énoncés inchangés depuis le 28/10, donc antérieurs aux premiers calculs de Samuel (#11)
+- **Décisions** : aucune nouvelle ; pas de seuil chiffré ajouté à H-2, pour ne pas le fixer après avoir vu les médianes par département
+- **Anomalies** : aucune
+- **Bloquant / question** : dates et montants officiels de la remise 2022 à sourcer avant de tester H-3 (QA-4.3)
+- **Prochaine étape** : faire valider H-1 à H-3 par l'équipe en commentaire de #25, puis démarrer #27 (nettoyage du flux des stations)
+
 ### 2026-11-10 · Samuel · Responsable restitution · Issue #11
 - **Fait** : test de prix_hebdo_par_station, prix_median_hebdo et prix_median_par_departement sur les données brutes 2023 (IDF, gazole : 175 351 relevés, 831 stations)
 - **Décisions** : traitement de la 1re semaine partielle (01/01/2023) et des semaines vides à proposer au chef → à reporter dans decisions.md

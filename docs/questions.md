@@ -41,11 +41,11 @@
 
 > Rédigées le 2026-10-28, avant tout calcul sur le périmètre retenu. Le résultat (confirmée / infirmée / non concluante) est ajouté après analyse, sans modifier l'énoncé.
 
-| ID | Hypothèse | Sous-question | Ce qui la confirmerait | Résultat |
-|---|---|---|---|---|
-| H-1 | À semaine identique, le gazole est plus cher dans les stations d'autoroute que hors autoroute. | QA-3.1 | Écart médian positif sur la grande majorité des semaines, avec le nombre de stations indiqué | À tester |
-| H-2 | Le prix médian du gazole est plus élevé à Paris (75) que dans les départements de grande couronne. | QA-1.1 | Prix médian du 75 supérieur à celui des départements 77, 78, 91 et 95 | À tester |
-| H-3 | Les prix publiés en 2022 intègrent la remise à la pompe. | QA-4.1, QA-4.3 | Baisse nette du prix médian hebdomadaire aux dates d'entrée en vigueur de la remise, et hausse à sa sortie, d'un ordre de grandeur comparable au montant officiel | À tester |
+| ID | Hypothèse | Sous-question | Indicateur | Méthode de comparaison descriptive | Ce qui la confirmerait | Statut |
+|---|---|---|---|---|---|---|
+| H-1 | À semaine identique, le gazole est plus cher dans les stations d'autoroute que hors autoroute. | QA-3.1 | Écart hebdomadaire entre le prix médian autoroute et le prix médian hors autoroute, en cts/L et en % (base : `prix_hebdo_par_station`) | Pour chaque semaine, médiane des stations A moins médiane des stations R ; on compte les semaines où l'écart est positif et on indique les effectifs A et R ; stations `pop = N` exclues (ANO-14) | Écart médian positif sur la grande majorité des semaines, avec le nombre de stations indiqué | Formulée |
+| H-2 | Le prix médian du gazole est plus élevé à Paris (75) que dans les départements de grande couronne. | QA-1.1 | Prix médian par département (médiane des médianes par station), écart au 75 en cts/L et en % (`prix_median_par_departement`, D-13) | Comparaison du prix médian du 75 avec celui de chaque département 77, 78, 91, 95, en indiquant le nombre de stations par département ; calcul fait année par année (2021, 2022, 2023) | Prix médian du 75 supérieur à celui des départements 77, 78, 91 et 95 | Formulée |
+| H-3 | Les prix publiés en 2022 intègrent la remise à la pompe. | QA-4.1, QA-4.3 | Prix médian hebdomadaire de la région, en €/L (`prix_median_hebdo`) | Variation du prix médian entre la semaine qui précède et celle qui suit chaque changement de remise (entrée en vigueur, changements de montant, fin), comparée au montant officiel de la remise ; on indique le nombre de stations chaque semaine | Baisse nette du prix médian hebdomadaire aux dates d'entrée en vigueur de la remise, et hausse à sa sortie, d'un ordre de grandeur comparable au montant officiel | Formulée |
 
 ## 1 ter. Expression des écarts
 
