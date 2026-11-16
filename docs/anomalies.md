@@ -122,9 +122,11 @@
 ## ANO-13 · Stations de l'historique 2021 absentes du flux actuel
 - **Colonne(s)** : `id` (historique 2021 et flux v2)
 - **Description** : des stations de l'historique 2021 n'ont plus de ligne dans
-  le flux v2 du 09/11/2026. Exemple : id ... (à compléter avec absents_idf.head()).
+  le flux v2 du 09/11/2026. Exemple : le flux v2 du 09/11/2026. Exemple : id 75005001.
 - **Ampleur** : en Île-de-France, 838 lignes sur 1 607 (≈ 52 %), dont 798 en
-  route et 40 en autoroute. En France, 5 016 sur 13 386 (≈ 37 %).
+  route et 40 en autoroute (flux du 09/11/2026) ; recompté avec le flux du
+  11/11/2026 : 836 sur 1 607 (≈ 52 %), dont 796 en route et 40 en autoroute.
+  En France, 5 016 sur 13 386 (≈ 37 %) (flux du 09/11/2026).
 - **Cause probable** : stations fermées depuis 2021, changement d'identifiant ou
   absence de prix récents. Les données seules ne permettent pas de trancher.
 - **Traitement proposé** : signaler et conserver. Lors de la jointure (EF-06),
