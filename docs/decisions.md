@@ -121,3 +121,10 @@
 - **Justification** : GIT-06 impose un tag par jalon ; on tague le premier état de `main` qui contient les livrables du jalon, sans réécrire l'historique.
 - **Alternatives écartées** : ne pas poser les tags manqués (exigence non remplie) ; les poser sur `main` actuel (ne reflète pas l'état au jalon).
 - **Statut** : Proposée (Noé), à valider en équipe
+
+## D-15 · Choix de l'outil du tableau de bord (ET-03)
+- **Date** : 2026-11-16
+- **Décision** : réaliser le tableau de bord avec Streamlit, dans une seule page `app/dashboard.py`, lancée par `streamlit run app/dashboard.py`. La version est figée dans `requirements.txt` (`streamlit==1.66.1`).
+- **Justification** : ET-03 impose Streamlit par défaut et n'autorise Dash ou Panel que sur demande validée en S44 ; aucune demande n'a été faite. TB-06 demande un lancement en une commande et un affichage en moins de 10 s, ce que permet la page minimale. ET-05 demande de rester léger pour un portable de 8 Go de RAM : Streamlit lit directement les fichiers Parquet avec pandas. ET-01 est respectée par la version figée dans `requirements.txt`.
+- **Alternatives écartées** : Dash et Panel, qui ne sont autorisés que sur demande validée en S44 (ET-03) et pour lesquels l'équipe n'a aucun besoin justifiant une dérogation.
+- **Statut** : Proposée, à valider en équipe

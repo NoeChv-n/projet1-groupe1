@@ -39,7 +39,7 @@ Toute modification ultérieure des questions est soumise par écrit au commandit
 ## Reproduire l'analyse
 1. Télécharger les données : `python src/download.py` (à confirmer)
 2. Exécuter `notebooks/01_exploration_historique.ipynb`
-3. Lancer le tableau de bord : `streamlit run app/dashboard.py` (à confirmer)
+3. Lancer le tableau de bord : `streamlit run app/dashboard.py`
 
 ## Résultats principaux
 À compléter en fin de projet (3 à 5 constats).
