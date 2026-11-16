@@ -2,23 +2,24 @@
 
 _Mis à jour par le chef de projet au début de chaque semaine école et après chaque point à distance. 15 lignes maximum._
 
-- **Semaine / jalon** : S44 · J2 Exploration (26 → 30/10) · tag attendu : `v0.2` — **`v0.1` en retard (attendue S41), à poser en priorité**
-- **Prochaine échéance** : tag `v0.1` (issues #1 à #5), puis PC2 (02 → 06/11) : nettoyage terminé, jointure réalisée, maquette papier du tableau de bord
-- **Périmètre retenu** : région Ile de france, années 2021-2023, carburants gazole
-- **Questions analytiques** : en cours de rédaction (issue #5), non validées
+- **Semaine / jalon** : S47 · J3 Construction (16 → 20/11) · tag attendu : `v0.3`
+- **Tags** : `v0.1` et `v0.2` posés le 16/11 en retard (D-14)
+- **Prochaine échéance** : `v0.3` : statistiques consolidées, H-1 à H-3 testées, tableau de bord bêta ; puis PC3 (30/11 → 04/12)
+- **Périmètre retenu** : Île-de-France, 2021-2023, gazole (D-06, D-07)
+- **Questions analytiques** : v1 validée par le commanditaire le 28/10 (Q-05) ; hypothèses H-1 à H-3 formulées (#25)
 
 **Rôles cette semaine**
 
-| Membre             | GitHub          | Rôle (S44)                               | Issues |
-| ------------------ | --------------- | ---------------------------------------- | ------ |
-| Noé Chauvin        | @NoeChv-n       | Chef de projet (fixe)                    | #3, #5 |
-| Thikana Mageswaran | @Thikana17      | Responsable dépôt (relectures, tag v0.1) | #1, #2 |
-| Samuel Sanvee      | @Samolo007      | Responsable restitution                  | #4     |
-| Hafsa Aboulfaid    | @aboulfaidhafsa | Responsable données                      | #6, #7 |
+| Membre             | GitHub          | Rôle (S47)            | Issues   |
+| ------------------ | --------------- | --------------------- | -------- |
+| Noé Chauvin        | @NoeChv-n       | Chef de projet (fixe) | #35, #36 |
+| Thikana Mageswaran | @Thikana17      | Responsable données   | #35, #24 |
+| Samuel Sanvee      | @Samolo007      | Responsable dépôt     | #26      | 
+| Hafsa Aboulfaid    | @aboulfaidhafsa | Responsable restitution| …       |
 
-**Fait** : dépôt `projet1-groupe1` créé et `main` protégée (D-02, D-03) ; issues #1 à #7 et milestones v0.1 / v0.2 ; documents de pilotage rédigés (#3, PR ouverte)
-**En cours** : #1 structure du dépôt (Thikana) ; relecture PR #3 (Thikana) ; #5 questions analytiques (Noé)
-**Bloquants** : aucun — D-03 à valider en équipe ; dates de Q-01 à compléter ; #1 conditionne #2, #4 et #7
+**Fait** : flux v2 et historique 2023 explorés (#22, #21) ; premiers indicateurs (#23) ; nettoyage des stations (#27) ; ANO-02/03 et ANO-10 à 14 documentées
+**En cours** : nettoyage de l'historique (#26) ; outil de tableau de bord (#24) ; jointure (#35)
+**Bloquants** : #26 conditionne #35, les tests d'hypothèses et le tableau de bord ; dates de la remise 2022 à sourcer (H-3) ; D-03, D-12, D-13 à valider
 
 ---
 
@@ -29,6 +30,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **À quoi sert ce fichier** : c'est la mémoire commune de l'équipe et de nos LLM. Chacun le lit en début de session et y ajoute une entrée en fin de session.
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
+
+### 2026-11-16 · Noé · Chef de projet · Issue #36
+- **Fait** : tags `v0.1` (PR #18) et `v0.2` (PR #33) posés en retard ; « État actuel » du journal passé en S47 / J3 ; issue #35 (jointure EF-06) créée avec Thikana
+- **Décisions** : D-14 pose tardive des tags (proposée) → déjà dans decisions.md, à valider en équipe
+- **Anomalies** : aucune
+- **Bloquant / question** : rôles S47 de Thikana, Samuel et Hafsa à confirmer ; #26 conditionne la jointure #35
+- **Prochaine étape** : écrire `joindre_historique_stations()` dans `src/cleaning.py` (#35)
 
 ### 2026-11-16 · Noé · Chef de projet · Issue #27
 - **Fait** : `nettoyer_stations()` écrite dans `src/cleaning.py` (colonnes D-11, coordonnées converties en degrés, contrôles doublons / pop / code postal) ; notebook `02_nettoyage_stations` avec bilan 833 → 833 lignes et Parquet `stations_idf` ; fiches ANO-10 à ANO-14, récapitulatif et contrôles 1 à 3 complétés
