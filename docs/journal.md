@@ -30,6 +30,22 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-16 · Noé · Chef de projet · Suivi PR #31
+
+- **Fait** : tableau récapitulatif de anomalies.md aligné sur les fiches ANO-02/03 ; ampleur d'ANO-03 corrigée (631 = 3 + 628) ; entrée de journal du 16/11 replacée en haut ; README pointé vers 01_exploration_historique.ipynb ; cleaning.py formaté avec ruff
+- **Décisions** : aucune nouvelle
+- **Anomalies** : à créer dans #14 : prix 2021 en millièmes d'euro (1790 au lieu de 1.79)
+- **Bloquant / question** : numérotation ANO-02 à 09 à trancher entre Hafsa et Samuel
+- **Prochaine étape** : PR relue par Hafsa
+
+### 2026-11-16 · Hafsa · Responsable données · Issue #21
+
+- **Fait** : résolution des conflits Git sur `indicators.py`, nettoyage du code (`cleaning.py`) et du notebook, et correction de la documentation des anomalies suite à la review.
+- **Décisions** : définition de seuils métier pour le nettoyage des prix (ANO-02 : < 1 € remplacés par NaN ; ANO-03 : > 3 € remplacés par NaN, maintien des pics réels à 2,19-2,62 €).
+- **Anomalies** : mise à jour des fiches ANO-02 et ANO-03 avec les nouvelles règles métier.
+- **Bloquant / question** : aucun
+- **Prochaine étape** : pousser les corrections sur GitHub pour le merge final.
+
 ### 2026-11-15 · Noé · Chef de projet · Issue #25
 - **Fait** : hypothèses H-1 à H-3 complétées dans questions.md (indicateur, méthode de comparaison descriptive, statut « Formulée ») ; énoncés inchangés depuis le 28/10, donc antérieurs aux premiers calculs de Samuel (#11)
 - **Décisions** : aucune nouvelle ; pas de seuil chiffré ajouté à H-2, pour ne pas le fixer après avoir vu les médianes par département
@@ -125,10 +141,4 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 - **Bloquant / question** : historique_2021.zip était incomplet et le flux v2 servi en gzip (ANO-01), 52 % d'absents en IDF à discuter pour la jointure EF-06
 - **Prochaine étape** : pousser la branche et ouvrir la PR (Closes #22) avec un relecteur nommé
 
-- ### 2026-11-16 · Hafsa · Responsable données · Issue #21
 
-- **Fait** : résolution des conflits Git sur `indicators.py`, nettoyage du code (`cleaning.py`) et du notebook, et correction de la documentation des anomalies suite à la review.
-- **Décisions** : définition de seuils métier pour le nettoyage des prix (ANO-02 : < 1 € remplacés par NaN ; ANO-03 : > 3 € remplacés par NaN, maintien des pics réels à 2,19-2,62 €).
-- **Anomalies** : mise à jour des fiches ANO-02 et ANO-03 avec les nouvelles règles métier.
-- **Bloquant / question** : aucun
-- **Prochaine étape** : pousser les corrections sur GitHub pour le merge final.

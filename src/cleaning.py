@@ -1,8 +1,7 @@
 """Chargement et nettoyage des données de prix des carburants (contrat : D-11)."""
 
-
 import xml.etree.ElementTree as ET
-import zipfile  
+import zipfile
 import gzip
 
 import pandas as pd

@@ -9,8 +9,8 @@
 
 | ID     | Colonne(s) | Résumé                                   | Ampleur               | Traitement          |
 | ------ | ---------- | ---------------------------------------- | --------------------- | ------------------- |
-| ANO-02 | `prix`     | Prix du gazole anormalement bas (2023)   | 680 relevés           | Remplacer par `NaN` |
-| ANO-03 | `prix`     | Prix du gazole anormalement hauts (2023) | (inclus dans les 680) | Remplacer par `NaN` |
+| ANO-02 | `prix`| Prix du gazole < 1 € (2023) | 22 relevés sur 175 351 (≈ 0,01 %) | `NaN` si prix < 1 € |
+| ANO-03 | `prix`| Prix du gazole > 3 € et pics plausibles (2023) | 631 relevés sur 175 351 (≈ 0,36 %) | `NaN` si prix > 3 €, le reste conservé |
 
 ## Contrôles minimaux (CDC §8)
 
@@ -56,8 +56,8 @@
 ## ANO-03 · Prix du gazole anormalement hauts (2023)
 
 - **Colonne(s)** : `prix`
-- **Description** : Présence de prix impossibles (seuil métier : > 3 €, dont 7.76 €) et de prix très hauts mais plausibles liés au pic de septembre-octobre 2023 (entre 2,19 € et 2,62 €).
-- **Ampleur** : 634 relevés au total (3 relevés impossibles et 631 relevés plausibles) sur 175 351 (soit ~0,36 %).
+- **Description** : Présence de prix impossibles (seuil métier : > 3 €, dont 7.76 €) et de prix très hauts mais plausibles liés au pic de septembre-octobre 2023 (entre 2,19 € et 2,95 €).
+- **Ampleur** : 631 relevés au-dessus de 2,19 € sur 175 351 (≈ 0,36 %) : 3 relevés impossibles (> 3 €) et 628 relevés plausibles.
 - **Cause probable** : Erreur de saisie pour les prix > 3 €. Contexte économique réel pour les prix entre 2,19 € et 2,62 € (majoritairement Paris et autoroutes).
 - **Traitement** : Remplacer par du vide (`NaN`) les valeurs strictement supérieures à 3 €. Conserver les prix compris entre 2,19 € et 2,62 €.
 - **Impact** : Supprimer les valeurs entre 2,19 € et 2,62 € fausserait les analyses sur Paris et les autoroutes (H-1 et H-2).
