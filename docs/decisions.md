@@ -116,21 +116,4 @@
 - **Statut** : Proposée, à valider en équipe
 
 
-## D-15 · Outil du tableau de bord : Streamlit
-- **Date** : 2026-11-16
-- **Issue** : #24
-
-**Contexte**
- Le CDC impose Streamlit par défaut (ET-03) ; Dash ou Panel ne sont possibles que sur demande validée en S44.
-
-**Décision**
-Le tableau de bord est réalisé avec Streamlit, dans une seule page `app/dashboard.py`. La version est figée dans `requirements.txt` (`streamlit==1.66.1`, ET-01).
-
-**Justification**
-- ET-03 : Streamlit est l'outil imposé par défaut, et aucune demande de dérogation n'a été faite.
-- TB-06 : il se lance en une commande (`streamlit run app/dashboard.py`) et la page minimale s'affiche en moins de 10 s.
-- ET-05 : il lit directement les fichiers Parquet avec pandas, ce qui reste léger pour un portable de 8 Go de RAM.
-
-**Conséquences**
-Les graphiques utilisent Matplotlib/Seaborn via `st.pyplot`. Les fonctions de `src/` sont appelées par le notebook et par le tableau de bord (QC-03).
 
