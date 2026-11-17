@@ -98,7 +98,7 @@
 - **Colonne(s)** : `prix` (historique 2021)
 - **Description** : en 2021 les prix sont des entiers (médiane 1 499, min 301, max 4 493). En 2022 et 2023 ils sont en euros (médianes 1,903 et 1,872).
 - **Ampleur** : 209 501 lignes, soit toute l'année 2021.
-- **Cause probable** : changement d'échelle du fichier 2021, constaté sur les données, non confirmé par la documentation.
+- **Cause probable** : changement d'échelle du fichier 2021, constaté sur les données. Non confirmé : la page « Données publiques » de prix-carburants.gouv.fr (consultée le 2026-11-17, version ancienne d'après le moteur de recherche) décrit `valeur` comme « Prix en euros » sans préciser d'échelle par année.
 - **Traitement retenu** : corrigé, division par 1 000 pour 2021, avant tous les seuils.
 - **Impact sur l'analyse** : sans correction, toute comparaison entre années serait fausse et tous les prix de 2021 passeraient en `NaN`.
 - **Détectée par / date** : Samuel, 2026-11-17 · #26
