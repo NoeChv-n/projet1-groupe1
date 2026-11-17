@@ -67,6 +67,9 @@ def charger_historique(annee: int) -> pd.DataFrame:
 def nettoyer_historique(historique_brut: pd.DataFrame) -> pd.DataFrame:
     """Applique les traitements des fiches ANO-01 à 09, renvoie le format D-11.
 
+    À appeler une année à la fois : l'échelle (ANO-06) et les bornes
+    (ANO-05, ANO-07) sont calculées par année.
+
     Responsable : Samuel (#14).
     """
     # Nouvelle table aux noms du contrat D-11 ; la table brute reste intacte
@@ -113,7 +116,7 @@ def nettoyer_historique(historique_brut: pd.DataFrame) -> pd.DataFrame:
     mediane_station = historique.groupby("id_station")["prix_gazole"].transform("median")
     prix_trop_haut = historique["prix_gazole"] / mediane_station > 1.5
     historique.loc[prix_trop_haut, "prix_gazole"] = float("nan")
-    
+
     return historique
 
 

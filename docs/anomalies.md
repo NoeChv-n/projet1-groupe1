@@ -9,8 +9,12 @@
 
 | ID     | Colonne(s) | Résumé                                   | Ampleur               | Traitement          |
 | ------ | ---------- | ---------------------------------------- | --------------------- | ------------------- |
-| ANO-02 | `prix`| Prix du gazole < 1 € (2023) | 22 relevés sur 175 351 (≈ 0,01 %) | `NaN` si prix < 1 € |
+| ANO-02 | `prix` | Prix du gazole < 1 € (2021-2023) | 65 relevés sur 587 090 (≈ 0,01 %) | `NaN` si prix < 1 € |
 | ANO-03 | `prix` | Prix du gazole > 3 € (2021-2023) | 8 relevés : 2 en 2021, 3 en 2022, 3 en 2023 | `NaN` si prix > 3 € ; prix plausibles conservés |
+| ANO-04 | `id_pdv`, `date`, `prix` | Même station, même instant, prix différents | 8 lignes supprimées | Dernière ligne conservée (D-16) |
+| ANO-05 | `prix` | Prix très inférieurs au prix habituel de la station | 27 en 2023 ; 16 (2021) et ≈ 40 (2022) déduits | `NaN` sous 1,5 × IQR (D-17) |
+| ANO-06 | `prix` | Prix en millièmes d'euro en 2021 | 209 501 lignes (2021) | Corrigé (÷ 1 000) |
+| ANO-07 | `prix` | Prix très supérieurs au prix habituel de la station | 6 relevés (2021 : 2, 2023 : 4) | `NaN` au-delà de 1,5 × médiane (D-17) |
 | ANO-10 | `Région`, `Ville`, `code_departement` | 4 stations sans rattachement géographique | 4 / 9 820 (0,04 %) | Signalé, exclu par le filtre IDF |
 | ANO-11 | `latitude`, `longitude` | Coordonnées en degrés × 100 000 | 833 / 833 (100 %) | Corrigé (÷ 100 000) |
 | ANO-12 | `Code postal`, `code_departement` | Code postal d'une autre commune que le département | 4 / 833 (0,5 %) | Conservé, `departement` utilisé |
@@ -19,12 +23,12 @@
 
 ## Contrôles minimaux (CDC §8)
 
-- [ ] 1. Doublons exacts et doublons fonctionnels (même station / même relevé décrit plusieurs fois) — flux IDF : 0 doublon exact, 0 id en double (#27)
-- [ ] 2. Valeurs manquantes, y compris déguisées (0, chaîne vide, « -1 ») — flux IDF : 0 coordonnée manquante ou illisible (#27)
-- [ ] 3. Types incohérents (dates en texte, codes postaux sans zéro initial, prix et coordonnées en entiers) — flux IDF : codes postaux à 5 caractères, coordonnées converties (#27, ANO-11)
-- [ ] 4. Valeurs hors domaine ou aberrantes (méthode : 1,5 × IQR et/ou seuil métier, à préciser)
-- [ ] 5. Ruptures de série (carburants apparus/disparus, format XML qui change, remises 2022)
-- [ ] 6. Couverture (périodes ou territoires absents ou partiels)
+- [x] 1. Doublons exacts et doublons fonctionnels (même station / même relevé décrit plusieurs fois) — flux IDF : 0 doublon exact, 0 id en double (#27) ; historique : 0 doublon exact, 8 doublons fonctionnels supprimés (ANO-04, #26)
+- [ ] 2. Valeurs manquantes, y compris déguisées (0, chaîne vide, « -1 ») — flux IDF : 0 coordonnée manquante ou illisible (#27) ; historique : 0 prix illisible, prix à 0 traités par ANO-02 (#26)
+- [ ] 3. Types incohérents (dates en texte, codes postaux sans zéro initial, prix et coordonnées en entiers) — flux IDF : codes postaux à 5 caractères, coordonnées converties (#27, ANO-11) ; historique : dates converties, prix en entiers en 2021 (ANO-06) (#26)
+- [x] 4. Valeurs hors domaine ou aberrantes : seuil métier 1 à 3 €, borne basse 1,5 × IQR, 1,5 × médiane de la station (ANO-02, 03, 05, 07)
+- [ ] 5. Ruptures de série (carburants apparus/disparus, format XML qui change, remises 2022) — fait : échelle de 2021 (ANO-06), chocs de 2022 examinés (ANO-07) ; reste : remises à la pompe, carburants apparus/disparus
+- [x] 6. Couverture : historique, 2021, 2022 et 2023 couvrent chacun leur année complète (#26)
 
 ---
 
@@ -65,7 +69,7 @@
 - **Description** : prix supérieurs à 3 € (seuil métier), dont 7,76 € en 2023. Les prix plausibles de 2,19 à 2,62 € (pic de septembre-octobre 2023) sont conservés.
 - **Ampleur** : 8 relevés > 3 € sur 2021-2023 : 2 en 2021, 3 en 2022, 3 en 2023.
 - **Cause probable** : erreur de saisie pour les prix > 3 €.
-- **Traitement retenu** : passé en `NaN` si `> 3`. Un prix de 3,000 € exactement n'est pas attrapé par ce seuil : il est traité par ANO-07. Les prix compris entre 2,19 et 2,62 € sont conservés.
+- **Traitement retenu** : passé en `NaN` si `> 3`. Un prix de 3,000 € exactement n'est pas attrapé par ce seuil : il est traité par ANO-07. Les prix plausibles sont conservés (jusqu'à 2,62 € en 2023, jusqu'à 2,999 € en 2022 : stations parisiennes, mars et octobre 2022).
 - **Impact sur l'analyse** : supprimer les prix de Paris et des autoroutes entre 2,19 et 2,62 € fausserait H-1 et H-2.
 - **Détectée par / date** : Hafsa ; complétée par Samuel, 2026-11-17 · #26
 
@@ -73,9 +77,9 @@
 
 - **Colonne(s)** : `id_pdv`, `date`, `prix`
 - **Description** : deux relevés pour la même station au même horodatage, avec deux prix différents. Exemple : 75008006, 2023-01-17 07:00:00, 2,140 € et 2,170 €.
-- **Ampleur** : 2021 : 0 ; 2022 : 6 lignes concernées, 3 supprimées ; 2023 : 10 lignes concernées, 5 supprimées. Total : 8 lignes supprimées sur 587 082 (≈ 0,001 %). Écarts de prix de 0,9 à 4 centimes en 2023 ; ceux de 2022 n'ont pas été examinés.
+- **Ampleur** : 2021 : 0 ; 2022 : 6 lignes concernées, 3 supprimées ; 2023 : 10 lignes concernées, 5 supprimées. Total : 8 lignes supprimées sur 587 090 lignes brutes. Écarts de prix de 0,9 à 4 centimes en 2023 ; ceux de 2022 n'ont pas été examinés.
 - **Cause probable** : non déterminée.
-- **Traitement retenu** : conservée la dernière ligne du fichier (`keep="last"`). Hypothèse non vérifiée : l'ordre du fichier suit l'ordre de saisie. Décision D-13.
+- **Traitement retenu** : conservée la dernière ligne du fichier (`keep="last"`). Hypothèse non vérifiée : l'ordre du fichier suit l'ordre de saisie. Décision D-16.
 - **Impact sur l'analyse** : négligeable.
 - **Détectée par / date** : Samuel, 2026-11-17 · #26
 
@@ -85,7 +89,7 @@
 - **Description** : prix sous la borne basse 1,5 × IQR, calculée par année. En 2023 : 27 relevés de 1,000 à 1,513 €, tous en route, répartis sur 24 stations. Chacun est inférieur de 0,34 à 0,95 € à la médiane de sa station. Exemple : 77470001, 2023-07-18, 1,000 € contre 1,845 €.
 - **Ampleur** : 2023 : 27 relevés ; 2021 : 16 (déduit par différence) ; 2022 : environ 40 (déduit par différence).
 - **Cause probable** : erreur de saisie (hypothèse). Le seuil de 1 € d'ANO-02 laissait passer ces valeurs.
-- **Traitement retenu** : passé en `NaN` sous la borne basse. Borne haute non appliquée (ANO-03). Décision D-14.
+- **Traitement retenu** : passé en `NaN` sous la borne basse. Borne haute non appliquée (ANO-03). Décision D-17.
 - **Impact sur l'analyse** : faible sur les médianes globales ; le prix moyen de quelques stations est légèrement relevé.
 - **Détectée par / date** : Samuel, 2026-11-17 · #26
 
@@ -105,7 +109,7 @@
 - **Description** : relevés supérieurs à 1,5 fois la médiane de leur station sur l'année. 2021 : 3,000 € (station 94380003, médiane 1,393 €) et 2,292 € (91760001, médiane 1,425 €). 2023 : 4 relevés de 2,808 à 2,954 € (janvier à avril), pour des médianes de 1,82 à 1,92 €.
 - **Ampleur** : 2021 : 2 ; 2022 : 0 ; 2023 : 4. Total : 6 relevés.
 - **Cause probable** : erreur de saisie (hypothèse).
-- **Traitement retenu** : passé en `NaN`. Seuil de 1,5 fixé après examen des données : dans chaque année, un vide sépare le dernier ratio plausible (1,2 à 1,4) de ces valeurs (au moins 1,535). Décision D-14.
+- **Traitement retenu** : passé en `NaN`. Seuil de 1,5 fixé après examen des données : en 2021 et en 2023, un vide sépare le dernier ratio plausible (1,2 à 1,4) des valeurs écartées (au moins 1,535) ; en 2022, aucun relevé ne dépasse 1,394. Décision D-17.
 - **Conservé volontairement** : 63 relevés de 2022 au-dessus de 1,3 fois la médiane de leur station (60 en mars, 3 en octobre : les deux chocs de prix), ratio maximal 1,394 ; et le relevé 2,560 € de 94420001 en 2023 (ratio 1,33).
 - **Impact sur l'analyse** : négligeable sur les médianes. Limite : la médiane annuelle est fragile pour les stations à peu de relevés.
 - **Détectée par / date** : Samuel, 2026-11-17 · #26
@@ -201,4 +205,4 @@
   [JJ/MM/2026] ne contient que R (795) et A (38), vérifié par un `assert`
   dans la fonction. L'exclusion des comparaisons est à appliquer à la jointure
   ou en analyse ; `N` reste conservé dans `implantation`.
-- **Détectée par / date** : Thikana, [11/11/2026]
+- **Détectée par / date** : Thikana, [11/11/2026] ; complétée par Samuel, 2026-11-17 · #26

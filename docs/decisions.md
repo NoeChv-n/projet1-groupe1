@@ -132,7 +132,7 @@
 ## D-16 · Doublons fonctionnels de l'historique : garder la dernière ligne
 - **Date** : 2026-11-17
 - **Décision** : pour deux relevés de la même station au même instant, on garde la dernière ligne du fichier (`keep="last"`), dans `nettoyer_historique()`.
-- **Justification** : 8 lignes supprimées sur 587 082 (ANO-04) ; solution simple (`drop_duplicates`, vu en cours) qui conserve une valeur réelle de la source.
+- **Justification** : 8 lignes supprimées sur 587 090 lignes brutes (ANO-04) ; solution simple (`drop_duplicates`, vu en cours) qui conserve une valeur réelle de la source.
 - **Alternatives écartées** : moyenne des deux prix (valeur qui n'existe pas dans la source) ; double `NaN` (perte de relevés réels).
 - **Statut** : Proposée, à valider en relecture de #26. Hypothèse non vérifiée : l'ordre du fichier suit l'ordre de saisie.
 
@@ -141,4 +141,4 @@
 - **Décision** : dans `nettoyer_historique()`, appelée une année à la fois, les valeurs suivantes passent en `NaN` (la ligne est conservée), dans cet ordre : prix hors du seuil métier (< 1 € ou > 3 €), prix sous la borne basse 1,5 × IQR, prix supérieur à 1,5 fois la médiane de sa station.
 - **Justification** : les trois années n'ont pas le même niveau de prix (médianes de 1,499 € en 2021, 1,903 € en 2022 et 1,872 € en 2023), donc les bornes se calculent par année (ANO-05, ANO-07). Les prix élevés de mars et octobre 2022 et de septembre-octobre 2023 sont des chocs de marché (D-07) : la borne haute est relative à la station, pas un IQR global (ANO-03).
 - **Alternatives écartées** : IQR sur les trois années réunies ; borne haute à 1,3 × la médiane de la station (écarterait 63 relevés de 2022 qui semblent réels) ; suppression des lignes (interdit sans fiche ANO, CDC §8).
-- **Statut** : Proposée, à valider en équipe. Le seuil de 1,5 a été fixé après examen des données : dans chaque année, un vide sépare le dernier ratio plausible (1,2 à 1,4) des valeurs écartées (au moins 1,535).
+- **Statut** : Proposée, à valider en équipe. Le seuil de 1,5 a été fixé après examen des données : en 2021 et en 2023, un vide sépare le dernier ratio plausible (1,2 à 1,4) des valeurs écartées (au moins 1,535) ; en 2022, aucun relevé ne dépasse 1,394.
