@@ -219,7 +219,6 @@ def joindre_historique_stations(
     # Une jointure gauche sur une clé unique à droite ne doit ni ajouter ni perdre de relevé
     assert len(historique_joint) == nb_releves_avant, "la jointure a changé le nombre de relevés"
 
-    # ----- AJOUT 3b -----
     # D-18 : le département officiel du flux fait foi (ANO-12). Pour les stations
     # absentes du flux (ANO-13), on garde celui tiré du code postal, seul disponible
     departement_officiel = historique_joint["departement_flux"].notna()
@@ -227,6 +226,5 @@ def joindre_historique_stations(
         departement_officiel, "departement_flux"
     ]
     historique_joint = historique_joint.drop(columns="departement_flux")
-    # ----- FIN AJOUT -----
 
     return historique_joint
