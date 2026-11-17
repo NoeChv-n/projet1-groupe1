@@ -31,6 +31,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-17 · Samuel · Responsable dépôt · Issue #26
+- **Fait** : fonction de nettoyage de l'historique 2021-2023 écrite dans src/cleaning.py, notebook 02_nettoyage_historique et Parquet de 587 082 lignes produits
+- **Décisions** : D-16 (doublons, dernière ligne gardée) et D-17 (prix aberrants année par année) → déjà dans decisions.md
+- **Anomalies** : ANO-02 à ANO-07 créées ou complétées, ANO-14 corrigée (1 station, 47 relevés en 2021)
+- **Bloquant / question** : questions pour Hafsa à poster dans la PR ; échelle 2021 (ANO-06) non confirmée par la documentation du producteur ; D-16 et D-17 à valider
+- **Prochaine étape** : ouvrir la PR avec Closes #26 et la faire relire par Thikana
+
 ### 2026-11-16 · Noé · Chef de projet · Issue #36
 - **Fait** : tags `v0.1` (PR #18) et `v0.2` (PR #33) posés en retard ; « État actuel » du journal passé en S47 / J3 ; issue #35 (jointure EF-06) créée avec Thikana
 - **Décisions** : D-14 pose tardive des tags (proposée) → déjà dans decisions.md, à valider en équipe
