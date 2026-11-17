@@ -69,6 +69,52 @@ def nettoyer_historique(historique_brut: pd.DataFrame) -> pd.DataFrame:
 
     Responsable : Samuel (#14).
     """
+    # Nouvelle table aux noms du contrat D-11 ; la table brute reste intacte
+    # pour pouvoir comparer avant/après dans le notebook
+    historique = pd.DataFrame({
+        "id_station": historique_brut["id_pdv"],
+        "code_postal": historique_brut["cp"],
+        "departement": historique_brut["departement"],
+        "implantation": historique_brut["pop"],
+        # Sans format précis, une date mal écrite passerait inaperçue : ici elle lève une erreur
+        "date_releve": pd.to_datetime(historique_brut["date"], format="%Y-%m-%dT%H:%M:%S"),
+        # float dès le départ : en 2021 les prix sont des entiers (1499), la division par 1000 donnerait une erreur
+        "prix_gazole": pd.to_numeric(historique_brut["prix"], errors="coerce").astype(float),
+    })
+
+    # ANO-06 : en 2021 les prix sont en millièmes d'euro (ex. 1499 pour 1,499 €).
+    # À faire avant les seuils, sinon tous les prix de 2021 passeraient en NaN
+    annee_2021 = historique["date_releve"].dt.year == 2021
+    historique.loc[annee_2021, "prix_gazole"] = historique.loc[annee_2021, "prix_gazole"] / 1000
+
+    # ANO-04 : même station au même instant avec deux prix différents.
+    # On garde la dernière ligne du fichier (hypothèse : c'est la saisie la plus récente)
+    historique = historique.drop_duplicates(
+        subset=["id_station", "date_releve"], keep="last"
+    )
+
+    # ANO-02 et ANO-03 : prix impossibles (< 1 € ou > 3 €, seuil métier) passés en NaN.
+    # La ligne reste : on perd la valeur invalide, pas le relevé.
+    # Les prix plausibles sont conservés ; les écarts à la station relèvent d'ANO-07.
+    prix_impossible = (historique["prix_gazole"] < 1) | (historique["prix_gazole"] > 3)
+    historique.loc[prix_impossible, "prix_gazole"] = float("nan")
+
+    # ANO-05 : prix très inférieurs au prix habituel de la station (règle 1,5 x IQR, borne basse).
+    # On ne touche pas à la borne haute : les prix élevés de 2023 sont réels (ANO-03).
+    prix_valides = historique["prix_gazole"].dropna()
+    q1 = prix_valides.quantile(0.25)
+    q3 = prix_valides.quantile(0.75)
+    borne_basse = q1 - 1.5 * (q3 - q1)
+    prix_trop_bas = historique["prix_gazole"] < borne_basse
+    historique.loc[prix_trop_bas, "prix_gazole"] = float("nan")
+
+    # ANO-07 : prix très supérieurs au prix habituel de la station (> 1,5 x sa médiane).
+    # Les NaN déjà posés sont ignorés par la médiane, d'où l'ordre : après ANO-02/03/05.
+    mediane_station = historique.groupby("id_station")["prix_gazole"].transform("median")
+    prix_trop_haut = historique["prix_gazole"] / mediane_station > 1.5
+    historique.loc[prix_trop_haut, "prix_gazole"] = float("nan")
+    
+    return historique
 
 
 def lire_flux_v2(chemin: str = "data/raw/flux_v2.csv") -> pd.DataFrame:
