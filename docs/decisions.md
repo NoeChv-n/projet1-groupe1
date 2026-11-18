@@ -142,3 +142,10 @@
 - **Justification** : les trois années n'ont pas le même niveau de prix (médianes de 1,499 € en 2021, 1,903 € en 2022 et 1,872 € en 2023), donc les bornes se calculent par année (ANO-05, ANO-07). Les prix élevés de mars et octobre 2022 et de septembre-octobre 2023 sont des chocs de marché (D-07) : la borne haute est relative à la station, pas un IQR global (ANO-03).
 - **Alternatives écartées** : IQR sur les trois années réunies ; borne haute à 1,3 × la médiane de la station (écarterait 63 relevés de 2022 qui semblent réels) ; suppression des lignes (interdit sans fiche ANO, CDC §8).
 - **Statut** : Proposée, à valider en équipe. Le seuil de 1,5 a été fixé après examen des données : en 2021 et en 2023, un vide sépare le dernier ratio plausible (1,2 à 1,4) des valeurs écartées (au moins 1,535) ; en 2022, aucun relevé ne dépasse 1,394.
+
+## D-18 · Département retenu après la jointure
+- **Date** : 2026-11-17
+- **Décision** : pour les stations retrouvées dans le flux v2, le département est celui du flux (`code_departement`) ; pour les 121 stations absentes du flux (ANO-13), c'est celui déduit des 2 premiers chiffres du code postal dans l'historique. La table jointe est enregistrée dans `data/processed/historique_joint_idf.parquet` ; c'est elle que lisent `03_analyse` et le tableau de bord.
+- **Justification** : ANO-12 montre que le code postal peut appartenir à un autre département ; le flux est la seule source officielle, mais il ne décrit pas les stations fermées. Garder ces stations évite le biais du survivant sur QA-4.
+- **Alternatives écartées** : utiliser partout le code postal (erreur connue, ANO-12) ; exclure les stations absentes du flux (biais du survivant, 7,8 % des relevés).
+- **Statut** : Proposée (Noé), à valider en équipe

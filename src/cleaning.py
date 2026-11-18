@@ -193,3 +193,38 @@ def nettoyer_stations(stations_brutes: pd.DataFrame) -> pd.DataFrame:
     assert len(code_postal_valide) == len(stations), "code postal mal formé"
 
     return stations
+
+
+def joindre_historique_stations(
+    historique: pd.DataFrame, stations: pd.DataFrame
+) -> pd.DataFrame:
+    """Ajoute aux relevés la description des stations du flux v2 (EF-06).
+
+    Jointure gauche : les relevés des stations absentes du flux sont gardés (ANO-13).
+    Responsable : Noé (#35).
+    """
+    # Uniquement ce que l'historique n'a pas : code postal et implantation y sont
+    # déjà, et ils valent à la date du relevé (une station a pu changer depuis)
+    infos_flux = stations[["id_station", "departement", "ville", "latitude", "longitude"]]
+
+    # Le département existe des deux côtés avec des valeurs différentes (ANO-12) :
+    # on garde les deux pour choisir ensuite (D-18) au lieu d'en écraser un
+    infos_flux = infos_flux.rename(columns={"departement": "departement_flux"})
+
+    nb_releves_avant = len(historique)
+    historique_joint = historique.merge(
+        infos_flux, on="id_station", how="left", validate="many_to_one"
+    )
+
+    # Une jointure gauche sur une clé unique à droite ne doit ni ajouter ni perdre de relevé
+    assert len(historique_joint) == nb_releves_avant, "la jointure a changé le nombre de relevés"
+
+    # D-18 : le département officiel du flux fait foi (ANO-12). Pour les stations
+    # absentes du flux (ANO-13), on garde celui tiré du code postal, seul disponible
+    departement_officiel = historique_joint["departement_flux"].notna()
+    historique_joint.loc[departement_officiel, "departement"] = historique_joint.loc[
+        departement_officiel, "departement_flux"
+    ]
+    historique_joint = historique_joint.drop(columns="departement_flux")
+
+    return historique_joint

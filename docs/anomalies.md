@@ -17,8 +17,8 @@
 | ANO-07 | `prix` | Prix très supérieurs au prix habituel de la station | 6 relevés (2021 : 2, 2023 : 4) | `NaN` au-delà de 1,5 × médiane (D-17) |
 | ANO-10 | `Région`, `Ville`, `code_departement` | 4 stations sans rattachement géographique | 4 / 9 820 (0,04 %) | Signalé, exclu par le filtre IDF |
 | ANO-11 | `latitude`, `longitude` | Coordonnées en degrés × 100 000 | 833 / 833 (100 %) | Corrigé (÷ 100 000) |
-| ANO-12 | `Code postal`, `code_departement` | Code postal d'une autre commune que le département | 4 / 833 (0,5 %) | Conservé, `departement` utilisé |
-| ANO-13 | `id` | Stations de l'historique absentes du flux | 838 / 1 607 IDF (52 %) | Proposé : conservé à la jointure |
+| ANO-12 | `Code postal`, `code_departement` | Code postal d'une autre commune que le département | 4 / 833 stations (0,5 %) ; 802 / 587 082 relevés (0,14 %) | Département du flux retenu (D-18) |
+| ANO-13 | `id` | Stations de l'historique absentes du flux | 121 / 908 stations (13,3 %) ; 45 649 relevés (7,8 %) | Conservées, jointure gauche (D-18) |
 | ANO-14 | `pop` | Valeur `N` dans l'historique IDF 2021 | 47 / 209 501 (≈ 0,02 %), 1 station | Conservé ; exclu des comparaisons route/autoroute |
 
 ## Contrôles minimaux (CDC §8)
@@ -165,6 +165,8 @@
   la station 94160001 n'y serait donc pas comptée. À traiter à la jointure
   ou en analyse.
 - **Détectée par / date** : Thikana, [11/11/2026] · traitée par Noé, 2026-11-16 (#27)
+- **Ampleur dans l'historique (après jointure, #35)** : les 4 mêmes stations, 802 relevés sur 587 082 (≈ 0,14 %) : 78800001 (78 → 95), 92120004 (92 → 94), 94160001 (94 → 75), 94542003 (94 → 91)
+- **Traitement à la jointure** : département du flux retenu (D-18) ; impact principal sur H-2, la station 94160001 étant rattachée à Paris
 
 ## ANO-13 · Stations de l'historique 2021 absentes du flux actuel
 - **Colonne(s)** : `id` (historique 2021 et flux v2)
@@ -187,6 +189,10 @@
 - **Suivi** : sans objet pour `nettoyer_stations()` (#27) : aucune ligne du
   flux n'est concernée. Traitement à appliquer dans `02_jointure`.
 - **Détectée par / date** : Thikana, [11/11/2026]
+- **Ampleur après jointure (#35, historique nettoyé 2021-2023)** : 121 stations sur 908 ayant au moins un relevé gazole (≈ 13,3 %), soit 45 649 relevés sur 587 082 (≈ 7,8 %). L'écart avec le premier comptage (52 %) vient du périmètre : celui-ci portait sur tous les points de vente IDF du XML 2021, avec ou sans prix gazole. La part plus faible en relevés qu'en stations est cohérente avec des stations fermées en cours de période. À l'inverse, 46 stations du flux n'ont aucun relevé 2021-2023 (ouvertures probables), sans effet sur une jointure gauche.
+- **Traitement retenu** : jointure gauche (`how="left"`, `validate="many_to_one"`) dans `joindre_historique_stations()` ; les relevés sont tous conservés, `ville`, `latitude` et `longitude` restent vides pour ces stations.
+- **Impact sur l'analyse** : pas de biais du survivant sur QA-4. Le département de ces stations vient du code postal (D-18) : une station fermée dont le code postal appartient à un autre département serait mal classée sans qu'on puisse le détecter (cas observé sur 4 stations parmi celles du flux, ANO-12). Pas de carte possible pour ces stations.
+- **Suivi** : traité dans #35 (`02_jointure`).
 
 ## ANO-14 · Valeur de pop hors domaine dans l'historique 2021
 - **Colonne(s)** : `pop`

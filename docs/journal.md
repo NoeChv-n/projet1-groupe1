@@ -31,6 +31,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-17 · Noé · Chef de projet · Issue #35
+- **Fait** : `joindre_historique_stations()` écrite dans `src/cleaning.py` (jointure gauche, `validate="many_to_one"`, contrôle du nombre de relevés : 587 082 → 587 082) ; notebook `02_jointure` avec contrôles EF-06 et enregistrement de `historique_joint_idf.parquet`
+- **Décisions** : D-18 département du flux retenu, code postal pour les stations absentes du flux (proposée) → déjà dans decisions.md, à valider en équipe
+- **Anomalies** : ANO-12 complétée (4 stations, 802 relevés) ; ANO-13 recomptée (121 / 908 stations, 7,8 % des relevés), écart avec les 52 % expliqué
+- **Bloquant / question** : aucun ; H-2 et `03_analyse` peuvent maintenant lire la table jointe
+- **Prochaine étape** : ouvrir la PR `Closes #35` relue par Thikana, puis créer les issues H-1, H-2, H-3 et tableau de bord bêta
+
 ### 2026-11-17 · Samuel · Responsable dépôt · Issue #26
 - **Fait** : fonction de nettoyage de l'historique 2021-2023 écrite dans src/cleaning.py, notebook 02_nettoyage_historique et Parquet de 587 082 lignes produits
 - **Décisions** : D-16 (doublons, dernière ligne gardée) et D-17 (prix aberrants année par année) → déjà dans decisions.md
