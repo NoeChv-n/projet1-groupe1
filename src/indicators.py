@@ -92,6 +92,13 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
 
 VOLUME_REFERENCE_L = 100  # D-09 : volume de référence pour les écarts en euros
 
+def exclure_stations_n(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
+    """Retire en entier les stations dont l'implantation vaut N (ANO-14)."""
+    lignes_n = prix_hebdo[prix_hebdo[COL_IMPLANTATION] == "N"]
+    stations_n = lignes_n[COL_STATION].unique()
+    return prix_hebdo[~prix_hebdo[COL_STATION].isin(stations_n)]
+
+
 def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     """Écart hebdomadaire du prix du gazole, autoroute (A) moins route (R) (H-1).
 
@@ -102,9 +109,7 @@ def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     # La station dont l'implantation change selon l'année (N, A puis R) est exclue
     # en entier : son type de route n'est pas fiable (ANO-14 et fiche à venir)
 
-    lignes_n = prix_hebdo[prix_hebdo[COL_IMPLANTATION] == "N"]
-    stations_n = lignes_n[COL_STATION].unique()
-    prix_ar = prix_hebdo[~prix_hebdo[COL_STATION].isin(stations_n)]
+    prix_ar = exclure_stations_n(prix_hebdo)
 
     # Les semaines sans prix ne comptent pas dans les effectifs (D-13).
     prix_ar = prix_ar.dropna(subset=["prix_hebdo"])
