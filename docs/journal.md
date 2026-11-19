@@ -183,6 +183,6 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 ### 2026-11-19 · Thikana · Responsable données · Issue #41
 - **Fait** : `ecart_autoroute_hebdo()`, `ecart_autoroute_par_periode()` et `ecart_autoroute_par_departement()` écrites dans `src/indicators.py` (avec `exclure_stations_n()`) ; H-1 confirmée : écart A moins R positif sur 153 semaines sur 157 (97,5 %), médiane +8,8 cts/L ; statut de H-1 mis à jour dans `questions.md`
 - **Décisions** : D-19 seuil de 5 stations A par département pour interpréter l'écart → déjà dans decisions.md, à valider en équipe
-- **Anomalies** : ANO-xx créée (station 95320005 : implantation N, puis A, puis R selon l'année ; complète ANO-14)
+- **Anomalies** : ANO-15 créée (station 95320005 : implantation N, puis A, puis R selon l'année ; complète ANO-14)
 - **Bloquant / question** : écart plus faible aux T3 et T4 2022, à relier aux remises dans H-3 (dates à sourcer) ; coquille « dansles » dans l'énoncé de H-1, à voir avec Noé ; D-09, D-13, D-18 et D-19 à valider (#47)
 - **Prochaine étape** : ouvrir la PR `Closes #41`, relue par le responsable dépôt
