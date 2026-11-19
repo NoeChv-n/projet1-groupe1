@@ -107,7 +107,7 @@ def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     ecart_euros_100l.
     """
     # La station dont l'implantation change selon l'année (N, A puis R) est exclue
-    # en entier : son type de route n'est pas fiable (ANO-14 et fiche à venir)
+    # en entier : son type de route n'est pas fiable (ANO-14 et ANO-15).
 
     prix_ar = exclure_stations_n(prix_hebdo)
 
@@ -134,7 +134,6 @@ def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
 
     resultat.columns.name = None
     return resultat.reset_index()
-
 
 
 def ecart_autoroute_par_periode(
@@ -166,7 +165,6 @@ def ecart_autoroute_par_periode(
         nb_semaines=("semaine", "count"),
     )
     return par_periode.reset_index()
-
 
 
 def ecart_autoroute_par_departement(
