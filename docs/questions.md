@@ -39,13 +39,14 @@
 
 ## 1 bis. Hypothèses formulées avant calcul (EF-05)
 
-> Rédigées le 2026-10-28, avant tout calcul sur le périmètre retenu. Le résultat (confirmée / infirmée / non concluante) est ajouté après analyse, sans modifier l'énoncé.
+> H-1 à H-3 rédigées le 2026-10-28, avant tout calcul sur le périmètre retenu. H-4 ajoutée le 2026-11-19 (#44), avant tout calcul sur QA-2. Le résultat (confirmée / infirmée / non concluante) est ajouté après analyse, sans modifier l'énoncé.
 
 | ID | Hypothèse | Sous-question | Indicateur | Méthode de comparaison descriptive | Ce qui la confirmerait | Statut |
 |---|---|---|---|---|---|---|
 | H-1 | À semaine identique, le gazole est plus cher dans les stations d'autoroute que hors autoroute. | QA-3.1 | Écart hebdomadaire entre le prix médian autoroute et le prix médian hors autoroute, en cts/L et en % (base : `prix_hebdo_par_station`) | Pour chaque semaine, médiane des stations A moins médiane des stations R ; on compte les semaines où l'écart est positif et on indique les effectifs A et R ; stations `pop = N` exclues (ANO-14) | Écart médian positif sur la grande majorité des semaines, avec le nombre de stations indiqué | Formulée |
 | H-2 | Le prix médian du gazole est plus élevé à Paris (75) que dans les départements de grande couronne. | QA-1.1 | Prix médian par département (médiane des médianes par station), écart au 75 en cts/L et en % (`prix_median_par_departement`, D-13) | Comparaison du prix médian du 75 avec celui de chaque département 77, 78, 91, 95, en indiquant le nombre de stations par département ; calcul fait année par année (2021, 2022, 2023) | Prix médian du 75 supérieur à celui des départements 77, 78, 91 et 95 | Formulée |
 | H-3 | Les prix publiés en 2022 intègrent la remise à la pompe. | QA-4.1, QA-4.3 | Prix médian hebdomadaire de la région, en €/L (`prix_median_hebdo`) | Variation du prix médian entre la semaine qui précède et celle qui suit chaque changement de remise (entrée en vigueur, changements de montant, fin), comparée au montant officiel de la remise ; on indique le nombre de stations chaque semaine | Baisse nette du prix médian hebdomadaire aux dates d'entrée en vigueur de la remise, et hausse à sa sortie, d'un ordre de grandeur comparable au montant officiel | Formulée |
+| H-4 | Chaque année, le gazole est plus cher en juillet et en août que sur l'ensemble de l'année. | QA-2.1, QA-2.2 | Écart entre le prix médian du mois et le prix médian de son année, en cts/L, en % et en € pour 100 L (D-09) ; base : prix moyen mensuel par station, puis médiane des stations | Pour 2021, 2022 et 2023, on lit l'écart de juillet et d'août, on compte les années où les deux écarts sont positifs et on indique le nombre de stations par mois ; une tendance au sein de l'année (hausse continue, mesures de 2022 vues en H-3) peut créer un écart sans lien avec la saison, ce qui est signalé comme limite | Écarts de juillet et d'août positifs sur les trois années | Infirmée (2026-11-19, #44) : juillet au-dessus de la médiane de son année 1 fois sur 3, août 2 fois sur 3 ; les écarts suivent surtout l'évolution propre à chaque année
 
 ## 1 ter. Expression des écarts
 
