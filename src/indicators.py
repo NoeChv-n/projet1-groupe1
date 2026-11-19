@@ -7,6 +7,7 @@ COL_DEPARTEMENT = "departement"
 COL_IMPLANTATION = "implantation"
 COL_DATE = "date_releve"
 COL_PRIX = "prix_gazole"
+JOURS_SEMAINE = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
 
 
 def prix_hebdo_par_station(historique: pd.DataFrame) -> pd.DataFrame:
@@ -142,3 +143,28 @@ def comparer_profils_mensuels(ecarts_mensuels: pd.DataFrame) -> pd.DataFrame:
     # Le nom "annee" resterait collé à l'en-tête des colonnes après reset_index
     profils.columns.name = None
     return profils.reset_index()
+
+
+
+def releves_par_jour_semaine(historique: pd.DataFrame) -> pd.DataFrame:
+    """Nombre et part des relevés publiés chaque jour de la semaine (QA-2.3, diagnostic).
+
+    Entrée : historique joint (D-11). Responsable : Noé (#44).
+    Sortie : jour, nb_releves, part_releves_pct, nb_stations.
+    """
+    historique = historique.copy()
+    historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
+    # dt.dayofweek donne 0 pour lundi et 6 pour dimanche : on garde l'ordre de la semaine
+    historique["num_jour"] = historique[COL_DATE].dt.dayofweek
+
+    par_jour = historique.groupby("num_jour").agg(
+        nb_releves=(COL_PRIX, "count"),
+        nb_stations=(COL_STATION, "nunique"),
+    )
+    par_jour = par_jour.reset_index()
+
+    par_jour["jour"] = [JOURS_SEMAINE[num] for num in par_jour["num_jour"]]
+    # Si les stations publiaient au hasard, chaque jour aurait environ 14,3 % des relevés
+    part = par_jour["nb_releves"] / par_jour["nb_releves"].sum() * 100
+    par_jour["part_releves_pct"] = part.round(1)
+    return par_jour[["jour", "nb_releves", "part_releves_pct", "nb_stations"]]
