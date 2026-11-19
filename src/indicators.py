@@ -166,3 +166,41 @@ def ecart_autoroute_par_periode(
         nb_semaines=("semaine", "count"),
     )
     return par_periode.reset_index()
+
+
+
+def ecart_autoroute_par_departement(
+    prix_hebdo: pd.DataFrame, seuil_stations_a: int = 5
+) -> pd.DataFrame:
+    """Écart autoroute - route à département égal (QA-3.3, EF-08).
+
+    Entrée : sortie de prix_hebdo_par_station(). Responsable : Thikana.
+    interprete vaut True si le département compte au moins seuil_stations_a
+    stations A (D-19). Sortie : une ligne par département ayant des stations A.
+    """
+    prix_ar = exclure_stations_n(prix_hebdo)
+    stations = prix_ar.drop_duplicates(subset=COL_STATION)
+
+    resultats = []
+    for departement in stations[COL_DEPARTEMENT].unique():
+        stations_dep = stations[stations[COL_DEPARTEMENT] == departement]
+        nb_stations_a = (stations_dep[COL_IMPLANTATION] == "A").sum()
+        if nb_stations_a == 0:
+            continue  # pas de comparaison possible (ex. Paris)
+
+        prix_dep = prix_ar[prix_ar[COL_DEPARTEMENT] == departement]
+        ecart = ecart_autoroute_hebdo(prix_dep)
+        resultats.append(
+            {
+                "departement": departement,
+                "nb_stations_a": nb_stations_a,
+                "nb_stations_r": (stations_dep[COL_IMPLANTATION] == "R").sum(),
+                "ecart_cts": ecart["ecart_cts"].median(),
+                "ecart_pct": ecart["ecart_pct"].median(),
+                "ecart_euros_100l": ecart["ecart_euros_100l"].median(),
+                "semaines_positives": (ecart["ecart_cts"] > 0).sum(),
+                "nb_semaines": ecart["ecart_cts"].notna().sum(),
+                "interprete": nb_stations_a >= seuil_stations_a,
+            }
+        )
+    return pd.DataFrame(resultats)
