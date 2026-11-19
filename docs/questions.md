@@ -8,31 +8,35 @@
 **Question principale** : pour réduire la dépense en gazole d'une flotte dans la région retenue, quels écarts de prix au litre observe-t-on selon le lieu, le moment et le type de route, et comment ces prix ont-ils évolué sur la période retenue ?
 
 ### QA-1 · Où le gazole est-il le moins cher dans la région ?
-| N° | Sous-question | Colonnes / variables | Indicateur | Statut |
-|---|---|---|---|---|
-| QA-1.1 | Quel est le prix médian par département, et quel écart sépare le moins cher du plus cher ? | `cp`, `prix@nom`, `prix@valeur` | Prix médian (€/L), écart en cts et en % | Validée |
+
+| N°     | Sous-question                                                                                                                       | Colonnes / variables                     | Indicateur                                                    | Statut                                            |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- |
+| QA-1.1 | Quel est le prix médian par département, et quel écart sépare le moins cher du plus cher ?                                          | `cp`, `prix@nom`, `prix@valeur`          | Prix médian (€/L), écart en cts et en %                       | Validée                                           |
 | QA-1.2 | Parmi les communes qui comptent au moins 5 stations (seuil D-08), lesquelles ont les prix médians les plus bas et les plus élevés ? | `ville`, `cp`, `prix@nom`, `prix@valeur` | Prix médian (€/L), classement, nombre de stations par commune | Validée (Q-05) — seuil à confirmer après comptage |
-| QA-1.3 | Les prix sont-ils plus dispersés dans certains départements que dans d'autres ? | `cp`, `prix@nom`, `prix@valeur` | Écart interquartile (cts) | Validée |
+| QA-1.3 | Les prix sont-ils plus dispersés dans certains départements que dans d'autres ?                                                     | `cp`, `prix@nom`, `prix@valeur`          | Écart interquartile (cts)                                     | Validée                                           |
 
 ### QA-2 · À quel moment le plein coûte-t-il le moins cher ?
-| N° | Sous-question | Colonnes / variables | Indicateur | Statut |
-|---|---|---|---|---|
-| QA-2.1 | Quel est l'écart entre le prix médian de chaque mois et le prix médian de son année ? | `prix@maj`, `prix@nom`, `prix@valeur` | Écart mensuel en cts et en % | Validée |
-| QA-2.2 | Ce profil mensuel se retrouve-t-il d'une année sur l'autre ? | `prix@maj`, `prix@nom`, `prix@valeur` | Écarts mensuels comparés par année | Validée |
-| QA-2.3 | Le prix médian diffère-t-il selon le jour de la semaine ? | `prix@maj`, `prix@nom`, `prix@valeur` | Écart par jour en cts | Validée (Q-05), exploratoire : si les données ne permettent pas de conclure, on explique pourquoi |
+
+| N°     | Sous-question                                                                         | Colonnes / variables                  | Indicateur                         | Statut                                                                                            |
+| ------ | ------------------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------- |
+| QA-2.1 | Quel est l'écart entre le prix médian de chaque mois et le prix médian de son année ? | `prix@maj`, `prix@nom`, `prix@valeur` | Écart mensuel en cts et en %       | Validée                                                                                           |
+| QA-2.2 | Ce profil mensuel se retrouve-t-il d'une année sur l'autre ?                          | `prix@maj`, `prix@nom`, `prix@valeur` | Écarts mensuels comparés par année | Validée                                                                                           |
+| QA-2.3 | Le prix médian diffère-t-il selon le jour de la semaine ?                             | `prix@maj`, `prix@nom`, `prix@valeur` | Écart par jour en cts              | Validée (Q-05), exploratoire : si les données ne permettent pas de conclure, on explique pourquoi |
 
 ### QA-3 · Quel est le surcoût réel de l'autoroute ?
-| N° | Sous-question | Colonnes / variables | Indicateur | Statut |
-|---|---|---|---|---|
-| QA-3.1 | À semaine identique, quel est l'écart de prix médian entre stations d'autoroute et hors autoroute ? | `pop`, `prix@maj`, `prix@nom`, `prix@valeur` | Écart hebdomadaire en cts, en % et en € (D-09) ; **nombre de stations de chaque groupe** | Validée (Q-05) |
-| QA-3.2 | Cet écart est-il stable dans le temps ? | `pop`, `prix@maj`, `prix@nom`, `prix@valeur` | Évolution de l'écart (cts) ; **nombre de stations d'autoroute par période** | Validée (Q-05) |
-| QA-3.3 | Cet écart varie-t-il selon le département (si les effectifs le permettent) ? | `pop`, `cp`, `prix@maj`, `prix@nom`, `prix@valeur` | Écart en cts par département ; **nombre de stations d'autoroute par département** | Validée (Q-05) |
+
+| N°     | Sous-question                                                                                       | Colonnes / variables                               | Indicateur                                                                               | Statut         |
+| ------ | --------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------- |
+| QA-3.1 | À semaine identique, quel est l'écart de prix médian entre stations d'autoroute et hors autoroute ? | `pop`, `prix@maj`, `prix@nom`, `prix@valeur`       | Écart hebdomadaire en cts, en % et en € (D-09) ; **nombre de stations de chaque groupe** | Validée (Q-05) |
+| QA-3.2 | Cet écart est-il stable dans le temps ?                                                             | `pop`, `prix@maj`, `prix@nom`, `prix@valeur`       | Évolution de l'écart (cts) ; **nombre de stations d'autoroute par période**              | Validée (Q-05) |
+| QA-3.3 | Cet écart varie-t-il selon le département (si les effectifs le permettent) ?                        | `pop`, `cp`, `prix@maj`, `prix@nom`, `prix@valeur` | Écart en cts par département ; **nombre de stations d'autoroute par département**        | Validée (Q-05) |
 
 ### QA-4 · Comment le prix a-t-il évolué sur la période ?
-| N° | Sous-question | Colonnes / variables | Indicateur | Statut |
-|---|---|---|---|---|
-| QA-4.1 | Comment le prix médian hebdomadaire a-t-il évolué sur la période retenue ? | `prix@maj`, `prix@nom`, `prix@valeur` | Prix médian hebdomadaire (€/L) | Validée |
-| QA-4.2 | Quelles sont les semaines de plus forte hausse et de plus forte baisse, et quelle est leur ampleur ? | `prix@maj`, `prix@nom`, `prix@valeur` | Variation hebdomadaire en cts et en % | Validée |
+
+| N°     | Sous-question                                                                                         | Colonnes / variables                                    | Indicateur                                                                  | Statut         |
+| ------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------- | -------------- |
+| QA-4.1 | Comment le prix médian hebdomadaire a-t-il évolué sur la période retenue ?                            | `prix@maj`, `prix@nom`, `prix@valeur`                   | Prix médian hebdomadaire (€/L)                                              | Validée        |
+| QA-4.2 | Quelles sont les semaines de plus forte hausse et de plus forte baisse, et quelle est leur ampleur ?  | `prix@maj`, `prix@nom`, `prix@valeur`                   | Variation hebdomadaire en cts et en %                                       | Validée        |
 | QA-4.3 | Ces périodes coïncident-elles avec des événements datés à partir d'une source officielle référencée ? | `prix@maj`, `prix@valeur` + dates d'événements sourcées | Comparaison descriptive, sans lien causal ; chaque événement avec sa source | Validée (Q-05) |
 
 ---
@@ -41,11 +45,11 @@
 
 > Rédigées le 2026-10-28, avant tout calcul sur le périmètre retenu. Le résultat (confirmée / infirmée / non concluante) est ajouté après analyse, sans modifier l'énoncé.
 
-| ID | Hypothèse | Sous-question | Indicateur | Méthode de comparaison descriptive | Ce qui la confirmerait | Statut |
-|---|---|---|---|---|---|---|
-| H-1 | À semaine identique, le gazole est plus cher dans les stations d'autoroute que hors autoroute. | QA-3.1 | Écart hebdomadaire entre le prix médian autoroute et le prix médian hors autoroute, en cts/L et en % (base : `prix_hebdo_par_station`) | Pour chaque semaine, médiane des stations A moins médiane des stations R ; on compte les semaines où l'écart est positif et on indique les effectifs A et R ; stations `pop = N` exclues (ANO-14) | Écart médian positif sur la grande majorité des semaines, avec le nombre de stations indiqué | Formulée |
-| H-2 | Le prix médian du gazole est plus élevé à Paris (75) que dans les départements de grande couronne. | QA-1.1 | Prix médian par département (médiane des médianes par station), écart au 75 en cts/L et en % (`prix_median_par_departement`, D-13) | Comparaison du prix médian du 75 avec celui de chaque département 77, 78, 91, 95, en indiquant le nombre de stations par département ; calcul fait année par année (2021, 2022, 2023) | Prix médian du 75 supérieur à celui des départements 77, 78, 91 et 95 | Formulée |
-| H-3 | Les prix publiés en 2022 intègrent la remise à la pompe. | QA-4.1, QA-4.3 | Prix médian hebdomadaire de la région, en €/L (`prix_median_hebdo`) | Variation du prix médian entre la semaine qui précède et celle qui suit chaque changement de remise (entrée en vigueur, changements de montant, fin), comparée au montant officiel de la remise ; on indique le nombre de stations chaque semaine | Baisse nette du prix médian hebdomadaire aux dates d'entrée en vigueur de la remise, et hausse à sa sortie, d'un ordre de grandeur comparable au montant officiel | Formulée |
+| ID  | Hypothèse                                                                                          | Sous-question  | Indicateur                                                                                                                             | Méthode de comparaison descriptive                                                                                                                                                                                                                | Ce qui la confirmerait                                                                                                                                            | Statut    |
+| --- | -------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| H-1 | À semaine identique, le gazole est plus cher dans les stations d'autoroute que hors autoroute.     | QA-3.1         | Écart hebdomadaire entre le prix médian autoroute et le prix médian hors autoroute, en cts/L et en % (base : `prix_hebdo_par_station`) | Pour chaque semaine, médiane des stations A moins médiane des stations R ; on compte les semaines où l'écart est positif et on indique les effectifs A et R ; stations `pop = N` exclues (ANO-14)                                                 | Écart médian positif sur la grande majorité des semaines, avec le nombre de stations indiqué                                                                      | Formulée  |
+| H-2 | Le prix médian du gazole est plus élevé à Paris (75) que dans les départements de grande couronne. | QA-1.1         | Prix médian par département (médiane des médianes par station), écart au 75 en cts/L et en % (`prix_median_par_departement`, D-13)     | Comparaison du prix médian du 75 avec celui de chaque département 77, 78, 91, 95, en indiquant le nombre de stations par département ; calcul fait année par année (2021, 2022, 2023)                                                             | Prix médian du 75 supérieur à celui des départements 77, 78, 91 et 95                                                                                             | Confirmée |
+| H-3 | Les prix publiés en 2022 intègrent la remise à la pompe.                                           | QA-4.1, QA-4.3 | Prix médian hebdomadaire de la région, en €/L (`prix_median_hebdo`)                                                                    | Variation du prix médian entre la semaine qui précède et celle qui suit chaque changement de remise (entrée en vigueur, changements de montant, fin), comparée au montant officiel de la remise ; on indique le nombre de stations chaque semaine | Baisse nette du prix médian hebdomadaire aux dates d'entrée en vigueur de la remise, et hausse à sa sortie, d'un ordre de grandeur comparable au montant officiel | Formulée  |
 
 ## 1 ter. Expression des écarts
 
@@ -56,6 +60,7 @@ Les écarts sont donnés en cts/L et en %, et aussi en euros pour un volume de r
 > Les questions sont posées **par écrit** par l'interlocuteur unique (chef de projet), regroupées, et leur réponse est archivée ici.
 
 ### Q-01 · Utilisation d'un LLM comme assistant
+
 - **Date de la question** : 2026-10-26
 - **Posée par** : Noé Chauvin
 - **Question** : l'équipe peut-elle utiliser un LLM pour l'accompagner pendant le projet ?
@@ -66,6 +71,7 @@ Les écarts sont donnés en cts/L et en %, et aussi en euros pour un volume de r
 - **Conséquence** : mise en place d'instructions communes (`docs/instructions-llm.md`) et d'un workflow par projet Claude / Gem → voir D-04.
 
 ### Q-02 · Carburant retenu
+
 - **Date de la question** : 2026-10-27
 - **Posée par** : Noé Chauvin
 - **Question** : quel carburant l'analyse doit-elle couvrir ?
@@ -74,6 +80,7 @@ Les écarts sont donnés en cts/L et en %, et aussi en euros pour un volume de r
 - **Conséquence** : D-06.
 
 ### Q-03 · Structure des questions analytiques
+
 - **Date** : 2026-10-27
 - **Posée par** : Noé Chauvin (présentation du brouillon v1)
 - **Retour du commanditaire** : chaque axe principal doit être décomposé en 2 ou 3 sous-questions simples.
@@ -81,6 +88,7 @@ Les écarts sont donnés en cts/L et en %, et aussi en euros pour un volume de r
 - **Conséquence** : sous-questions QA-x.y dans la section 1.
 
 ### Q-04 · Chocs à analyser
+
 - **Date de la question** : 2021-2023
 - **Posée par** : Noé Chauvin
 - **Question** : quels événements récents souhaitez-vous voir analysés (périodes ou dates précises) ?
@@ -88,6 +96,7 @@ Les écarts sont donnés en cts/L et en %, et aussi en euros pour un volume de r
 - **Conséquence** : l'équipe propose la liste des événements avec leurs sources ; la liste est soumise au commanditaire avec la synthèse.
 
 ### Q-05 · Validation du cadrage v1
+
 - **Date de la question** : 2026-10-[jj] (envoi du document de cadrage v1)
 - **Posée par** : Noé Chauvin
 - **Réponse** : cadrage v1 validé sous réserves :
@@ -101,7 +110,6 @@ Les écarts sont donnés en cts/L et en %, et aussi en euros pour un volume de r
   - toute modification ultérieure des questions lui est soumise par écrit.
 - **Date de la réponse** : 2026-10-28 (écrit)
 - **Message archivé** :
-
 
 Mohamed BENYAMINA<m.benyamina@intervenant-ggeedu.fr>
 
@@ -136,10 +144,10 @@ Cordialement,
 BENYAMINA Mohamed
 
 ### Q-06 · Format du flux v2
+
 - **Date de la question** : 2026-10-28
 - **Posée par** : Noé Chauvin
 - **Question** : le flux v2 doit-il être utilisé au format XML (fichier du ministère) ou la version CSV de data.gouv.fr est-elle acceptée ? Par défaut, l'équipe annonçait le XML.
 - **Réponse** : le XML n'est imposé que pour l'historique annuel. Pour le flux v2, les deux formats sont acceptés, à condition de justifier le choix dans `docs/decisions.md`. Le périmètre gazole, Île-de-France, 2021-2023 est validé.
 - **Date de la réponse** : 2026-10-28 (écrit)
 - **Conséquence** : réserve « région » de Q-05 levée ; choix du format → D-10.
-

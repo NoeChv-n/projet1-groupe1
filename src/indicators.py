@@ -86,3 +86,130 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
         ["ecart_cts", "ecart_pct"]
     ].round(2)
     return par_departement
+
+# --- Axe QA-1 (Hafsa) ---
+
+
+def ecart_departements_au_75(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
+    """Écart de prix médian de chaque département au 75, année par année (QA-1.1, H-2).
+
+    Entrée : sortie de prix_hebdo_par_station() issue de la table jointe (D-18 appliquée).
+    Sortie : DataFrame avec annee, departement, prix_median, nb_stations,
+    écarts au 75 (cts/L, %, €/100L) et écart au moins cher (cts/L, %).
+    """
+    df = prix_hebdo.copy()
+    df[COL_DEPARTEMENT] = df[COL_DEPARTEMENT].astype(str)
+    df["annee"] = pd.to_datetime(df["semaine"]).dt.year
+
+    resultats = []
+    for annee, groupe in df.groupby("annee"):
+        stats = prix_median_par_departement(groupe)
+        ligne_75 = stats.loc[stats[COL_DEPARTEMENT] == "75", "prix_median"]
+        if ligne_75.empty:
+            continue
+
+        prix_75 = ligne_75.iloc[0]
+        ecart = stats["prix_median"] - prix_75
+
+        stats["annee"] = annee
+        stats["ecart_75_cts"] = (ecart * 100).round(2)
+        stats["ecart_75_pct"] = (ecart / prix_75 * 100).round(2)
+        # D-09 : 1 ct/L équivaut à 1 € pour 100 L
+        stats["ecart_75_eur_100l"] = stats["ecart_75_cts"]
+
+        resultats.append(stats)
+
+    if not resultats:
+        return pd.DataFrame()
+
+    colonnes = [
+        "annee",
+        COL_DEPARTEMENT,
+        "prix_median",
+        "nb_stations",
+        "ecart_75_cts",
+        "ecart_75_pct",
+        "ecart_75_eur_100l",
+        "ecart_cts",
+        "ecart_pct",
+    ]
+    return pd.concat(resultats, ignore_index=True)[colonnes]
+
+
+def prix_median_par_commune(
+    historique_joint: pd.DataFrame, min_stations: int = 5
+) -> pd.DataFrame:
+    """Prix médian par commune pour les communes ayant au moins `min_stations` (QA-1.2).
+
+    Entrée : table jointe nettoyée (historique_joint_idf.parquet, D-18 appliquée).
+    Sortie : departement, ville, prix_median (€/L), nb_stations, trié par prix croissant.
+    """
+    prix_hebdo = prix_hebdo_par_station(historique_joint)
+
+    villes = (
+        historique_joint[[COL_STATION, "ville"]]
+        .dropna(subset=["ville"])
+        .drop_duplicates(subset=[COL_STATION], keep="last")
+    )
+
+    par_station = (
+        prix_hebdo.groupby([COL_STATION, COL_DEPARTEMENT])
+        .agg(prix_station=("prix_hebdo", "median"))
+        .reset_index()
+        .merge(villes, on=COL_STATION, how="inner")
+    )
+
+    par_commune = (
+        par_station.groupby([COL_DEPARTEMENT, "ville"])
+        .agg(
+            prix_median=("prix_station", "median"),
+            nb_stations=(COL_STATION, "nunique"),
+        )
+        .reset_index()
+    )
+
+    par_commune = par_commune[par_commune["nb_stations"] >= min_stations].copy()
+    par_commune["prix_median"] = par_commune["prix_median"].round(3)
+    return par_commune.sort_values("prix_median", ascending=True).reset_index(drop=True)
+
+
+def dispersion_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
+    """Dispersion intra-départementale des prix médians par station (QA-1.3).
+
+    Entrée : sortie de prix_hebdo_par_station() issue de la table jointe (D-18 appliquée).
+    Sortie : departement, nb_stations, prix_median, q1, q3, iqr_cts, ecart_p90_p10_cts.
+    """
+    par_station = (
+        prix_hebdo.groupby([COL_STATION, COL_DEPARTEMENT])
+        .agg(prix_station=("prix_hebdo", "median"))
+        .reset_index()
+    )
+
+    stats = (
+        par_station.groupby(COL_DEPARTEMENT)["prix_station"]
+        .agg(
+            nb_stations="count",
+            prix_median="median",
+            q1=lambda s: s.quantile(0.25),
+            q3=lambda s: s.quantile(0.75),
+            p10=lambda s: s.quantile(0.10),
+            p90=lambda s: s.quantile(0.90),
+        )
+        .reset_index()
+    )
+
+    stats["iqr_cts"] = ((stats["q3"] - stats["q1"]) * 100).round(2)
+    stats["ecart_p90_p10_cts"] = ((stats["p90"] - stats["p10"]) * 100).round(2)
+    stats[["prix_median", "q1", "q3"]] = stats[["prix_median", "q1", "q3"]].round(3)
+
+    return stats[
+        [
+            COL_DEPARTEMENT,
+            "nb_stations",
+            "prix_median",
+            "q1",
+            "q3",
+            "iqr_cts",
+            "ecart_p90_p10_cts",
+        ]
+    ]
