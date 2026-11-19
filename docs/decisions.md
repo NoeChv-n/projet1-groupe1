@@ -148,8 +148,7 @@
 - **Décision** : pour les stations retrouvées dans le flux v2, le département est celui du flux (`code_departement`) ; pour les 121 stations absentes du flux (ANO-13), c'est celui déduit des 2 premiers chiffres du code postal dans l'historique. La table jointe est enregistrée dans `data/processed/historique_joint_idf.parquet` ; c'est elle que lisent `03_analyse` et le tableau de bord.
 - **Justification** : ANO-12 montre que le code postal peut appartenir à un autre département ; le flux est la seule source officielle, mais il ne décrit pas les stations fermées. Garder ces stations évite le biais du survivant sur QA-4.
 - **Alternatives écartées** : utiliser partout le code postal (erreur connue, ANO-12) ; exclure les stations absentes du flux (biais du survivant, 7,8 % des relevés).
-- **Statut** : Proposée (Noé), à valider en équipe
-
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-19 · Seuil minimal de stations d'autoroute par département (QA-3.3)
 - **Date** : 2026-11-19
@@ -157,4 +156,3 @@
 - **Justification** : en dessous de 5 stations A, la médiane hebdomadaire A repose sur une ou deux stations : l'écart mesurerait une station plutôt que l'autoroute du département. Même raisonnement et même valeur que D-08 pour les communes. Le seuil est fixé d'après le nombre de stations A par département (77 : 17, 91 : 9, 78 : 7, 95 : 6, 94 : 3, 93 : 2, 92 : 1) et non d'après les valeurs des écarts. Q-05 demande d'indiquer le nombre de stations derrière chaque comparaison.
 - **Alternatives écartées** : aucun seuil (le 93, avec 2 stations A, serait commenté comme le 77, qui en a 17) ; seuil de 10 (ne garderait que le 77) ; seuil de 3 (garderait le 94, dont la médiane repose sur 3 stations).
 - **Statut** : Proposée (Thikana), à valider en équipe
-- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
