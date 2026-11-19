@@ -102,7 +102,7 @@
 - **Décision** : six notebooks, exécutés dans cet ordre, chacun avec un seul propriétaire :
   - `01_exploration_historique` (Hafsa), `01_exploration_stations` (Thikana), `01_premiers_indicateurs` (Samuel, provisoire)
   - `02_nettoyage_historique` (Samuel), `02_nettoyage_stations` (Noé), `02_jointure` (Noé, co-autrice Thikana)
-  - `03_analyse` (propriétaire à désigner en J3) : un seul notebook, car l'analyse porte sur la table jointe des deux sources
+  - `03_analyse` (Noé) : un seul notebook, car l'analyse porte sur la table jointe des deux sources
   Le code réutilisable vit dans `src/` ; en analyse, chacun écrit ses fonctions dans `src/indicators.py` et le propriétaire de `03_analyse` les appelle.
 - **Justification** : un `.ipynb` est un fichier JSON que Git ne sait pas fusionner à deux ; un propriétaire par fichier évite les conflits ; QC-03. Écart à l'annexe B autorisé s'il est décrit dans le README.
 - **Alternatives écartées** : un notebook unique pour tout le projet (conflits à chaque PR) ; plusieurs notebooks d'analyse (les deux sources doivent être croisées dans la même table).
