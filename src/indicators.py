@@ -86,3 +86,119 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
         ["ecart_cts", "ecart_pct"]
     ].round(2)
     return par_departement
+
+
+
+
+VOLUME_REFERENCE_L = 100  # D-09 : volume de référence pour les écarts en euros
+
+def exclure_stations_n(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
+    """Retire en entier les stations dont l'implantation vaut N (ANO-14)."""
+    lignes_n = prix_hebdo[prix_hebdo[COL_IMPLANTATION] == "N"]
+    stations_n = lignes_n[COL_STATION].unique()
+    return prix_hebdo[~prix_hebdo[COL_STATION].isin(stations_n)]
+
+
+def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
+    """Écart hebdomadaire du prix du gazole, autoroute (A) moins route (R) (H-1).
+
+    Entrée : sortie de prix_hebdo_par_station(). Responsable : Thikana.
+    Sortie : semaine, mediane_a, mediane_r (€/L), nb_a, nb_r, ecart_cts, ecart_pct,
+    ecart_euros_100l.
+    """
+    # La station dont l'implantation change selon l'année (N, A puis R) est exclue
+    # en entier : son type de route n'est pas fiable (ANO-14 et ANO-15).
+
+    prix_ar = exclure_stations_n(prix_hebdo)
+
+    # Les semaines sans prix ne comptent pas dans les effectifs (D-13).
+    prix_ar = prix_ar.dropna(subset=["prix_hebdo"])
+
+    medianes = prix_ar.pivot_table(
+        index="semaine", columns=COL_IMPLANTATION, values="prix_hebdo", aggfunc="median"
+    )
+    effectifs = prix_ar.pivot_table(
+        index="semaine", columns=COL_IMPLANTATION, values="prix_hebdo", aggfunc="count"
+    )
+
+    resultat = medianes.rename(columns={"A": "mediane_a", "R": "mediane_r"})
+    resultat["nb_a"] = effectifs["A"]
+    resultat["nb_r"] = effectifs["R"]
+
+    # Prix en €/L : x 100 pour obtenir des cts/L ; le % est rapporté à la médiane R.
+    resultat["ecart_cts"] = (resultat["mediane_a"] - resultat["mediane_r"]) * 100
+    resultat["ecart_pct"] = resultat["ecart_cts"] / (resultat["mediane_r"] * 100) * 100
+
+    # D-09 : écart en € pour 100 L de gazole (1 ct/L = 1 € pour 100 L).
+    resultat["ecart_euros_100l"] = resultat["ecart_cts"] * VOLUME_REFERENCE_L / 100
+
+    resultat.columns.name = None
+    return resultat.reset_index()
+
+
+def ecart_autoroute_par_periode(
+    ecart_hebdo: pd.DataFrame, periode: str = "trimestre"
+) -> pd.DataFrame:
+    """Médiane de l'écart autoroute - route par trimestre ou par année (QA-3.2).
+
+    Entrée : sortie de ecart_autoroute_hebdo(). Responsable : Thikana.
+    periode : "trimestre" ou "annee". Sortie : une ligne par période, avec
+    ecart_cts, ecart_pct, ecart_euros_100l (médianes) et nb_a_median, nb_a_min.
+    """
+    ecart_hebdo = ecart_hebdo.copy()
+    ecart_hebdo["annee"] = ecart_hebdo["semaine"].dt.year
+    ecart_hebdo["trimestre"] = ecart_hebdo["semaine"].dt.quarter
+
+    if periode == "annee":
+        cles = ["annee"]
+    elif periode == "trimestre":
+        cles = ["annee", "trimestre"]
+    else:
+        raise ValueError('periode doit valoir "annee" ou "trimestre"')
+
+    par_periode = ecart_hebdo.groupby(cles).agg(
+        ecart_cts=("ecart_cts", "median"),
+        ecart_pct=("ecart_pct", "median"),
+        ecart_euros_100l=("ecart_euros_100l", "median"),
+        nb_a_median=("nb_a", "median"),
+        nb_a_min=("nb_a", "min"),
+        nb_semaines=("semaine", "count"),
+    )
+    return par_periode.reset_index()
+
+
+def ecart_autoroute_par_departement(
+    prix_hebdo: pd.DataFrame, seuil_stations_a: int = 5
+) -> pd.DataFrame:
+    """Écart autoroute - route à département égal (QA-3.3, EF-08).
+
+    Entrée : sortie de prix_hebdo_par_station(). Responsable : Thikana.
+    interprete vaut True si le département compte au moins seuil_stations_a
+    stations A (D-19). Sortie : une ligne par département ayant des stations A.
+    """
+    prix_ar = exclure_stations_n(prix_hebdo)
+    stations = prix_ar.drop_duplicates(subset=COL_STATION)
+
+    resultats = []
+    for departement in stations[COL_DEPARTEMENT].unique():
+        stations_dep = stations[stations[COL_DEPARTEMENT] == departement]
+        nb_stations_a = (stations_dep[COL_IMPLANTATION] == "A").sum()
+        if nb_stations_a == 0:
+            continue  # pas de comparaison possible (ex. Paris)
+
+        prix_dep = prix_ar[prix_ar[COL_DEPARTEMENT] == departement]
+        ecart = ecart_autoroute_hebdo(prix_dep)
+        resultats.append(
+            {
+                "departement": departement,
+                "nb_stations_a": nb_stations_a,
+                "nb_stations_r": (stations_dep[COL_IMPLANTATION] == "R").sum(),
+                "ecart_cts": ecart["ecart_cts"].median(),
+                "ecart_pct": ecart["ecart_pct"].median(),
+                "ecart_euros_100l": ecart["ecart_euros_100l"].median(),
+                "semaines_positives": (ecart["ecart_cts"] > 0).sum(),
+                "nb_semaines": ecart["ecart_cts"].notna().sum(),
+                "interprete": nb_stations_a >= seuil_stations_a,
+            }
+        )
+    return pd.DataFrame(resultats)
