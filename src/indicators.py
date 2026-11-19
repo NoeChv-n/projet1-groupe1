@@ -86,3 +86,41 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
         ["ecart_cts", "ecart_pct"]
     ].round(2)
     return par_departement
+
+
+def ecart_mensuel_a_l_annee(historique: pd.DataFrame) -> pd.DataFrame:
+    """Écart du prix médian de chaque mois au prix médian de son année (QA-2.1, H-4).
+
+    Entrée : historique joint (D-11). Responsable : Noé (#44).
+    Sortie : annee, mois, prix_median_mois, prix_median_annee, nb_stations,
+    ecart_cts, ecart_pct, ecart_euros_100l.
+    """
+    historique = historique.copy()
+    historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
+    historique["annee"] = historique[COL_DATE].dt.year
+    historique["mois"] = historique[COL_DATE].dt.month
+
+    # Une station qui publie tous les jours ne doit pas peser plus qu'une autre
+    prix_station_mois = historique.groupby([COL_STATION, "annee", "mois"]).agg(
+        prix_mensuel=(COL_PRIX, "mean")
+    )
+    prix_station_mois = prix_station_mois.reset_index()
+
+    # Référence de l'année sur la même base que les mois (une valeur par station et par mois)
+    prix_station_mois["prix_median_annee"] = prix_station_mois.groupby("annee")[
+        "prix_mensuel"
+    ].transform("median")
+
+    par_mois = prix_station_mois.groupby(["annee", "mois"]).agg(
+        prix_median_mois=("prix_mensuel", "median"),
+        prix_median_annee=("prix_median_annee", "first"),
+        nb_stations=(COL_STATION, "nunique"),
+    )
+    par_mois = par_mois.reset_index()
+
+    ecart = par_mois["prix_median_mois"] - par_mois["prix_median_annee"]
+    par_mois["ecart_cts"] = (ecart * 100).round(2)
+    par_mois["ecart_pct"] = (ecart / par_mois["prix_median_annee"] * 100).round(2)
+    # D-09 : avec 100 L de référence, 1 ct/L d'écart vaut 1 €
+    par_mois["ecart_euros_100l"] = par_mois["ecart_cts"]
+    return par_mois
