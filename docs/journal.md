@@ -10,12 +10,14 @@ _Mis à jour par le chef de projet au début de chaque semaine école et après 
 
 **Rôles cette semaine**
 
-| Membre             | GitHub          | Rôle (S47)            | Issues   |
-| ------------------ | --------------- | --------------------- | -------- |
-| Noé Chauvin        | @NoeChv-n       | Chef de projet (fixe) | #35, #36 |
-| Thikana Mageswaran | @Thikana17      | Responsable données   | #35, #24 |
-| Samuel Sanvee      | @Samolo007      | Responsable dépôt     | #26      | 
-| Hafsa Aboulfaid    | @aboulfaidhafsa | Responsable restitution| …       |
+**Rôles cette semaine**
+
+| Membre             | GitHub          | Rôle (S47)              | Issues        |
+| ------------------ | --------------- | ----------------------- | ------------- |
+| Noé Chauvin        | @NoeChv-n       | Chef de projet (fixe)   | #44, #46, #47 |
+| Thikana Mageswaran | @Thikana17      | Responsable données     | #41           |
+| Samuel Sanvee      | @Samolo007      | Responsable dépôt       | #43, #45      |
+| Hafsa Aboulfaid    | @aboulfaidhafsa | Responsable restitution | #42           |
 
 **Fait** : flux v2 et historique 2023 explorés (#22, #21) ; premiers indicateurs (#23) ; nettoyage des stations (#27) ; ANO-02/03 et ANO-10 à 14 documentées
 **En cours** : nettoyage de l'historique (#26) ; outil de tableau de bord (#24) ; jointure (#35)

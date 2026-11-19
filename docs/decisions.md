@@ -32,7 +32,7 @@
 - **Décision** : le responsable dépôt de la semaine relit par défaut ; si il ou elle est indisponible ou auteur de la PR, n'importe quel autre membre relit. Personne ne relit sa propre PR.
 - **Justification** : GIT-02 (1 approbation minimum) sans goulot d'étranglement ; rôle du responsable dépôt (CDC §11).
 - **Alternatives écartées** : un relecteur unique fixe (bloque l'équipe en cas d'absence).
-- **Statut** : Proposée, à valider en équipe
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-04 · Usage encadré d'un LLM comme assistant pédagogique
 - **Date** : 2026-10-27
@@ -106,7 +106,7 @@
   Le code réutilisable vit dans `src/` ; en analyse, chacun écrit ses fonctions dans `src/indicators.py` et le propriétaire de `03_analyse` les appelle.
 - **Justification** : un `.ipynb` est un fichier JSON que Git ne sait pas fusionner à deux ; un propriétaire par fichier évite les conflits ; QC-03. Écart à l'annexe B autorisé s'il est décrit dans le README.
 - **Alternatives écartées** : un notebook unique pour tout le projet (conflits à chaque PR) ; plusieurs notebooks d'analyse (les deux sources doivent être croisées dans la même table).
-- **Statut** : Proposée (Noé), à valider en relecture
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-13 · Calcul de l'écart de prix entre départements (QA-1.1)
 - **Date** : 2026-10-30
@@ -148,4 +148,4 @@
 - **Décision** : pour les stations retrouvées dans le flux v2, le département est celui du flux (`code_departement`) ; pour les 121 stations absentes du flux (ANO-13), c'est celui déduit des 2 premiers chiffres du code postal dans l'historique. La table jointe est enregistrée dans `data/processed/historique_joint_idf.parquet` ; c'est elle que lisent `03_analyse` et le tableau de bord.
 - **Justification** : ANO-12 montre que le code postal peut appartenir à un autre département ; le flux est la seule source officielle, mais il ne décrit pas les stations fermées. Garder ces stations évite le biais du survivant sur QA-4.
 - **Alternatives écartées** : utiliser partout le code postal (erreur connue, ANO-12) ; exclure les stations absentes du flux (biais du survivant, 7,8 % des relevés).
-- **Statut** : Proposée (Noé), à valider en équipe
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
