@@ -90,7 +90,6 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
 
 
 
-# --- Axe QA-3 (Thikana) ---
 VOLUME_REFERENCE_L = 100  # D-09 : volume de référence pour les écarts en euros
 
 def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
@@ -130,3 +129,35 @@ def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
 
     resultat.columns.name = None
     return resultat.reset_index()
+
+
+
+def ecart_autoroute_par_periode(
+    ecart_hebdo: pd.DataFrame, periode: str = "trimestre"
+) -> pd.DataFrame:
+    """Médiane de l'écart autoroute - route par trimestre ou par année (QA-3.2).
+
+    Entrée : sortie de ecart_autoroute_hebdo(). Responsable : Thikana.
+    periode : "trimestre" ou "annee". Sortie : une ligne par période, avec
+    ecart_cts, ecart_pct, ecart_euros_100l (médianes) et nb_a_median, nb_a_min.
+    """
+    ecart_hebdo = ecart_hebdo.copy()
+    ecart_hebdo["annee"] = ecart_hebdo["semaine"].dt.year
+    ecart_hebdo["trimestre"] = ecart_hebdo["semaine"].dt.quarter
+
+    if periode == "annee":
+        cles = ["annee"]
+    elif periode == "trimestre":
+        cles = ["annee", "trimestre"]
+    else:
+        raise ValueError('periode doit valoir "annee" ou "trimestre"')
+
+    par_periode = ecart_hebdo.groupby(cles).agg(
+        ecart_cts=("ecart_cts", "median"),
+        ecart_pct=("ecart_pct", "median"),
+        ecart_euros_100l=("ecart_euros_100l", "median"),
+        nb_a_median=("nb_a", "median"),
+        nb_a_min=("nb_a", "min"),
+        nb_semaines=("semaine", "count"),
+    )
+    return par_periode.reset_index()
