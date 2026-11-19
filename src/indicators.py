@@ -168,3 +168,36 @@ def releves_par_jour_semaine(historique: pd.DataFrame) -> pd.DataFrame:
     part = par_jour["nb_releves"] / par_jour["nb_releves"].sum() * 100
     par_jour["part_releves_pct"] = part.round(1)
     return par_jour[["jour", "nb_releves", "part_releves_pct", "nb_stations"]]
+
+def ecart_par_jour_semaine(
+    historique: pd.DataFrame, jours_max_sans_releve: int = 7
+) -> pd.DataFrame:
+    """Écart du prix médian de chaque jour de la semaine au prix médian global (QA-2.3).
+
+    Entrée : historique joint (D-11). Responsable : Noé (#44).
+    D-19 : entre deux relevés, le prix est supposé inchangé, au plus
+    jours_max_sans_releve jours. Sortie : jour, prix_median, nb_station_jours, ecart_cts.
+    """
+    historique = historique.copy()
+    historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
+
+    # Un prix par station et par jour : le dernier publié, celui en vigueur le soir
+    prix_jour = (
+        historique.set_index(COL_DATE).groupby(COL_STATION)[COL_PRIX].resample("D").last()
+    )
+    # Un jour sans relevé reprend le dernier prix de la même station, 7 jours au plus (D-19)
+    prix_jour = prix_jour.groupby(level=COL_STATION).ffill(limit=jours_max_sans_releve)
+    prix_jour = prix_jour.dropna().reset_index()
+
+    prix_jour["num_jour"] = prix_jour[COL_DATE].dt.dayofweek
+    par_jour = prix_jour.groupby("num_jour").agg(
+        prix_median=(COL_PRIX, "median"),
+        nb_station_jours=(COL_PRIX, "count"),
+    )
+    par_jour = par_jour.reset_index()
+    par_jour["jour"] = [JOURS_SEMAINE[num] for num in par_jour["num_jour"]]
+
+    # Chaque jour revient autant de fois sur la période : la hausse générale pèse pareil sur tous
+    ecart = par_jour["prix_median"] - prix_jour[COL_PRIX].median()
+    par_jour["ecart_cts"] = (ecart * 100).round(2)
+    return par_jour[["jour", "prix_median", "nb_station_jours", "ecart_cts"]]
