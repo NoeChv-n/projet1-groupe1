@@ -33,6 +33,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-19 · Noé · Chef de projet · Issue #47
+- **Fait** : tableau des rôles S47 mis à jour (#41 à #47) ; D-03, D-12 (`03_analyse` attribué à Noé) et D-18 passées « Validée » ; ANO-06 : « Cause probable » sourcée (ancienne FAQ ×1 000, rupture 2022 constatée par un dépôt tiers, ordre de grandeur SDES) ; ruff OK sur `main`
+- **Décisions** : D-03, D-12, D-18 validées en équipe le 19/11 → déjà reportées dans decisions.md
+- **Anomalies** : ANO-06 complétée (fiche de Samuel, à valider par lui en relecture)
+- **Bloquant / question** : D-13 à D-17 restent à valider en équipe ; aucune doc officielle actuelle ne confirme l'échelle 2021
+- **Prochaine étape** : ouvrir la PR `Refs #47` relue par Samuel, puis faire voter D-13 à D-17 en commentaire sur #47
+
 ### 2026-11-17 · Noé · Chef de projet · Issue #35
 - **Fait** : `joindre_historique_stations()` écrite dans `src/cleaning.py` (jointure gauche, `validate="many_to_one"`, contrôle du nombre de relevés : 587 082 → 587 082) ; notebook `02_jointure` avec contrôles EF-06 et enregistrement de `historique_joint_idf.parquet`
 - **Décisions** : D-18 département du flux retenu, code postal pour les stations absentes du flux (proposée) → déjà dans decisions.md, à valider en équipe
