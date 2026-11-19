@@ -86,3 +86,47 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
         ["ecart_cts", "ecart_pct"]
     ].round(2)
     return par_departement
+
+
+
+
+# --- Axe QA-3 (Thikana) ---
+VOLUME_REFERENCE_L = 100  # D-09 : volume de référence pour les écarts en euros
+
+def ecart_autoroute_hebdo(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
+    """Écart hebdomadaire du prix du gazole, autoroute (A) moins route (R) (H-1).
+
+    Entrée : sortie de prix_hebdo_par_station(). Responsable : Thikana.
+    Sortie : semaine, mediane_a, mediane_r (€/L), nb_a, nb_r, ecart_cts, ecart_pct,
+    ecart_euros_100l.
+    """
+    # La station dont l'implantation change selon l'année (N, A puis R) est exclue
+    # en entier : son type de route n'est pas fiable (ANO-14 et fiche à venir)
+
+    lignes_n = prix_hebdo[prix_hebdo[COL_IMPLANTATION] == "N"]
+    stations_n = lignes_n[COL_STATION].unique()
+    prix_ar = prix_hebdo[~prix_hebdo[COL_STATION].isin(stations_n)]
+
+    # Les semaines sans prix ne comptent pas dans les effectifs (D-13).
+    prix_ar = prix_ar.dropna(subset=["prix_hebdo"])
+
+    medianes = prix_ar.pivot_table(
+        index="semaine", columns=COL_IMPLANTATION, values="prix_hebdo", aggfunc="median"
+    )
+    effectifs = prix_ar.pivot_table(
+        index="semaine", columns=COL_IMPLANTATION, values="prix_hebdo", aggfunc="count"
+    )
+
+    resultat = medianes.rename(columns={"A": "mediane_a", "R": "mediane_r"})
+    resultat["nb_a"] = effectifs["A"]
+    resultat["nb_r"] = effectifs["R"]
+
+    # Prix en €/L : x 100 pour obtenir des cts/L ; le % est rapporté à la médiane R.
+    resultat["ecart_cts"] = (resultat["mediane_a"] - resultat["mediane_r"]) * 100
+    resultat["ecart_pct"] = resultat["ecart_cts"] / (resultat["mediane_r"] * 100) * 100
+
+    # D-09 : écart en € pour 100 L de gazole (1 ct/L = 1 € pour 100 L).
+    resultat["ecart_euros_100l"] = resultat["ecart_cts"] * VOLUME_REFERENCE_L / 100
+
+    resultat.columns.name = None
+    return resultat.reset_index()
