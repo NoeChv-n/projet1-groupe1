@@ -124,3 +124,21 @@ def ecart_mensuel_a_l_annee(historique: pd.DataFrame) -> pd.DataFrame:
     # D-09 : avec 100 L de référence, 1 ct/L d'écart vaut 1 €
     par_mois["ecart_euros_100l"] = par_mois["ecart_cts"]
     return par_mois
+
+def comparer_profils_mensuels(ecarts_mensuels: pd.DataFrame) -> pd.DataFrame:
+    """Écarts mensuels en cts/L, une colonne par année (QA-2.2, H-4).
+
+    Entrée : sortie de ecart_mensuel_a_l_annee(). Responsable : Noé (#44).
+    Sortie : mois, une colonne par année, nb_annees_au_dessus.
+    """
+    # Une seule valeur par mois et par année : la moyenne par défaut la recopie telle quelle
+    profils = ecarts_mensuels.pivot_table(
+        index="mois", columns="annee", values="ecart_cts"
+    )
+
+    # H-4 : un mois « cher » chaque année doit être au-dessus de sa médiane 3 fois sur 3
+    profils["nb_annees_au_dessus"] = (profils > 0).sum(axis=1)
+
+    # Le nom "annee" resterait collé à l'en-tête des colonnes après reset_index
+    profils.columns.name = None
+    return profils.reset_index()
