@@ -142,7 +142,8 @@ def prix_median_par_commune(
     """Prix médian par commune pour les communes ayant au moins `min_stations` (QA-1.2).
 
     Entrée : table jointe nettoyée (historique_joint_idf.parquet, D-18 appliquée).
-    Sortie : departement, ville, prix_median (€/L), nb_stations, trié par prix croissant.
+    Sortie : departement, ville, prix_median (€/L), nb_stations,
+    ecart_med_reg_cts, ecart_med_reg_eur_100l, trié par prix croissant.
     """
     prix_hebdo = prix_hebdo_par_station(historique_joint)
 
@@ -159,6 +160,8 @@ def prix_median_par_commune(
         .merge(villes, on=COL_STATION, how="inner")
     )
 
+    mediane_regionale = par_station["prix_station"].median()
+
     par_commune = (
         par_station.groupby([COL_DEPARTEMENT, "ville"])
         .agg(
@@ -169,24 +172,52 @@ def prix_median_par_commune(
     )
 
     par_commune = par_commune[par_commune["nb_stations"] >= min_stations].copy()
+    ecart_reg = par_commune["prix_median"] - mediane_regionale
+    par_commune["ecart_med_reg_cts"] = (ecart_reg * 100).round(2)
+    # D-09 : 1 ct/L équivaut à 1 € pour 100 L
+    par_commune["ecart_med_reg_eur_100l"] = par_commune["ecart_med_reg_cts"]
     par_commune["prix_median"] = par_commune["prix_median"].round(3)
-    return par_commune.sort_values("prix_median", ascending=True).reset_index(drop=True)
+
+    colonnes = [
+        COL_DEPARTEMENT,
+        "ville",
+        "prix_median",
+        "nb_stations",
+        "ecart_med_reg_cts",
+        "ecart_med_reg_eur_100l",
+    ]
+    return (
+        par_commune[colonnes]
+        .sort_values("prix_median", ascending=True)
+        .reset_index(drop=True)
+    )
 
 
-def dispersion_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
+def dispersion_par_departement(
+    prix_hebdo: pd.DataFrame, par_annee: bool = False
+) -> pd.DataFrame:
     """Dispersion intra-départementale des prix médians par station (QA-1.3).
 
     Entrée : sortie de prix_hebdo_par_station() issue de la table jointe (D-18 appliquée).
-    Sortie : departement, nb_stations, prix_median, q1, q3, iqr_cts, ecart_p90_p10_cts.
+    Si par_annee=True, le calcul est effectué année par année (2021, 2022, 2023).
+    Sortie : [annee,] departement, nb_stations, prix_median, q1, q3, iqr_cts, ecart_p90_p10_cts.
     """
+    df = prix_hebdo.copy()
+    df[COL_DEPARTEMENT] = df[COL_DEPARTEMENT].astype(str)
+
+    cles = [COL_DEPARTEMENT]
+    if par_annee:
+        df["annee"] = pd.to_datetime(df["semaine"]).dt.year
+        cles = ["annee", COL_DEPARTEMENT]
+
     par_station = (
-        prix_hebdo.groupby([COL_STATION, COL_DEPARTEMENT])
+        df.groupby([*cles, COL_STATION])
         .agg(prix_station=("prix_hebdo", "median"))
         .reset_index()
     )
 
     stats = (
-        par_station.groupby(COL_DEPARTEMENT)["prix_station"]
+        par_station.groupby(cles)["prix_station"]
         .agg(
             nb_stations="count",
             prix_median="median",
@@ -204,7 +235,7 @@ def dispersion_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
 
     return stats[
         [
-            COL_DEPARTEMENT,
+            *cles,
             "nb_stations",
             "prix_median",
             "q1",
