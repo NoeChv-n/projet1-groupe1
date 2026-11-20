@@ -175,7 +175,7 @@ def ecart_par_jour_semaine(
     """Écart du prix médian de chaque jour de la semaine au prix médian global (QA-2.3).
 
     Entrée : historique joint (D-11). Responsable : Noé (#44).
-    D-19 : entre deux relevés, le prix est supposé inchangé, au plus
+    D-20 : entre deux relevés, le prix est supposé inchangé, au plus
     jours_max_sans_releve jours. Sortie : jour, prix_median, nb_station_jours, ecart_cts.
     """
     historique = historique.copy()
@@ -185,7 +185,7 @@ def ecart_par_jour_semaine(
     prix_jour = (
         historique.set_index(COL_DATE).groupby(COL_STATION)[COL_PRIX].resample("D").last()
     )
-    # Un jour sans relevé reprend le dernier prix de la même station, 7 jours au plus (D-19)
+    # Un jour sans relevé reprend le dernier prix de la même station, 7 jours au plus (D-20)
     prix_jour = prix_jour.groupby(level=COL_STATION).ffill(limit=jours_max_sans_releve)
     prix_jour = prix_jour.dropna().reset_index()
 
