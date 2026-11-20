@@ -156,3 +156,9 @@
 - **Justification** : un relevé correspond à une publication de prix, pas à une vente ; les stations publient moins le week-end (dimanche : 9,0 % des relevés et 770 stations, contre environ 905 en semaine), donc la médiane des relevés bruts par jour compare des groupes de stations différents. 7 jours couvrent un cycle complet de semaine ; au-delà, la station a pu fermer.
 - **Alternatives écartées** : médiane des relevés bruts par jour (biaisée, voir ci-dessus) ; remplissage sans limite (prolonge le prix des stations fermées).
 - **Statut** : Proposée (Noé), à valider en équipe
+## D-19 · Seuil minimal de stations d'autoroute par département (QA-3.3)
+- **Date** : 2026-11-19
+- **Décision** : un département n'est interprété dans QA-3.3 que s'il compte au moins 5 stations A (hors station N). Les départements sous le seuil restent dans le tableau avec leurs effectifs, marqués `interprete = False`, et ne sont pas commentés. Le seuil est le paramètre `seuil_stations_a` de `ecart_autoroute_par_departement()`.
+- **Justification** : en dessous de 5 stations A, la médiane hebdomadaire A repose sur une ou deux stations : l'écart mesurerait une station plutôt que l'autoroute du département. Même raisonnement et même valeur que D-08 pour les communes. Le seuil est fixé d'après le nombre de stations A par département (77 : 17, 91 : 9, 78 : 7, 95 : 6, 94 : 3, 93 : 2, 92 : 1) et non d'après les valeurs des écarts. Q-05 demande d'indiquer le nombre de stations derrière chaque comparaison.
+- **Alternatives écartées** : aucun seuil (le 93, avec 2 stations A, serait commenté comme le 77, qui en a 17) ; seuil de 10 (ne garderait que le 77) ; seuil de 3 (garderait le 94, dont la médiane repose sur 3 stations).
+- **Statut** : Proposée (Thikana), à valider en équipe
