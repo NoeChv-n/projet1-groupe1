@@ -343,3 +343,42 @@ def evenements_remise_2022() -> pd.DataFrame:
     })
     tableau["source"] = URL_REMISE
     return tableau
+
+def variation_autour_evenements(
+    mediane: pd.DataFrame, evenements: pd.DataFrame
+) -> pd.DataFrame:
+    """Variation du prix médian autour de chaque changement de remise (H-3, QA-4.3).
+
+    Entrée : sortie de prix_median_hebdo() et de evenements_remise_2022().
+    Responsable : Samuel. Compare la dernière semaine entière avant l'événement
+    à la première semaine entière après. Sortie : une ligne par événement.
+    """
+    mediane = mediane.set_index("semaine")
+    lignes = []
+    for i in range(len(evenements)):
+        date_effet = evenements.loc[i, "date_effet"]
+        # Les semaines sont datées du dimanche : on part du dimanche qui clôt la semaine de l'événement
+        fin_semaine = date_effet.to_period("W-SUN").end_time.normalize()
+        semaine_avant = fin_semaine - pd.Timedelta(days=7)
+        semaine_apres = fin_semaine + pd.Timedelta(days=7)
+
+        variation_cts = (
+            mediane.loc[semaine_apres, "prix_median"]
+            - mediane.loc[semaine_avant, "prix_median"]
+        ) * 100
+        # Une remise qui augmente fait baisser le prix : le signe est inversé
+        attendue_cts = (
+            evenements.loc[i, "remise_avant_cts"] - evenements.loc[i, "remise_apres_cts"]
+        )
+        lignes.append({
+            "date_effet": date_effet,
+            "semaine_avant": semaine_avant,
+            "semaine_apres": semaine_apres,
+            "nb_stations_avant": mediane.loc[semaine_avant, "nb_stations"],
+            "nb_stations_apres": mediane.loc[semaine_apres, "nb_stations"],
+            "variation_cts": round(variation_cts, 2),
+            "attendue_cts": attendue_cts,
+            "variation_euros_100l": round(variation_cts * VOLUME_REFERENCE_L / 100, 2),
+            "attendue_euros_100l": attendue_cts * VOLUME_REFERENCE_L / 100,
+        })
+    return pd.DataFrame(lignes)
