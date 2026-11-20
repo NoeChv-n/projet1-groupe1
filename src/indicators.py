@@ -315,3 +315,31 @@ def ecart_autoroute_par_departement(
             }
         )
     return pd.DataFrame(resultats)
+
+URL_REMISE = (
+    "https://www.info.gouv.fr/actualite/"
+    "toutes-les-reponses-a-vos-questions-sur-la-remise-carburant"
+)
+
+
+def evenements_remise_2022() -> pd.DataFrame:
+    """Dates de changement de la remise à la pompe en 2022 (QA-4.3, H-3).
+
+    Responsable : Samuel. Montants en cts/L TTC (gazole, métropole), sources
+    dans docs/questions.md. Sortie : date_effet, evenement, remise_avant_cts,
+    remise_apres_cts, source.
+    """
+    dates = pd.to_datetime(["2022-04-01", "2022-09-01", "2022-11-16", "2023-01-01"])
+    tableau = pd.DataFrame({
+        "date_effet": dates,
+        "evenement": [
+            "Entrée en vigueur de la remise",
+            "Hausse du montant de la remise",
+            "Baisse du montant de la remise",
+            "Fin de la remise",
+        ],
+        "remise_avant_cts": [0, 18, 30, 10],
+        "remise_apres_cts": [18, 30, 10, 0],
+    })
+    tableau["source"] = URL_REMISE
+    return tableau
