@@ -382,3 +382,41 @@ def variation_autour_evenements(
             "attendue_euros_100l": attendue_cts * VOLUME_REFERENCE_L / 100,
         })
     return pd.DataFrame(lignes)
+
+def variations_hebdo_extremes(
+    mediane: pd.DataFrame,
+    evenements: pd.DataFrame,
+    nb_extremes: int = 5,
+    part_min_stations: float = 0.9,
+) -> pd.DataFrame:
+    """Semaines de plus forte hausse et de plus forte baisse du prix médian (QA-4.2).
+
+    Entrée : sortie de prix_median_hebdo() et de evenements_remise_2022().
+    Responsable : Samuel. Sortie : nb_extremes hausses puis nb_extremes baisses,
+    avec variation_cts, variation_pct, nb_stations, peu_de_stations et
+    evenement_coincident (événement daté de la semaine ou de la précédente).
+    """
+    variations = mediane.copy()
+    variations["variation_cts"] = variations["prix_median"].diff() * 100
+    variations["variation_pct"] = variations["prix_median"].pct_change() * 100
+    # La première semaine n'a pas de semaine précédente : pas de variation
+    variations = variations.dropna(subset=["variation_cts"])
+
+    # Une semaine à peu de stations est signalée, pas retirée du classement
+    seuil = mediane["nb_stations"].median() * part_min_stations
+    variations["peu_de_stations"] = variations["nb_stations"] < seuil
+
+    coincide = []
+    for semaine in variations["semaine"]:
+        debut = semaine - pd.Timedelta(days=13)  # la semaine précédente commence 13 jours avant
+        dans_fenetre = evenements[
+            (evenements["date_effet"] >= debut) & (evenements["date_effet"] <= semaine)
+        ]
+        coincide.append(", ".join(dans_fenetre["evenement"]))
+    variations["evenement_coincident"] = coincide
+
+    hausses = variations.sort_values("variation_cts", ascending=False).head(nb_extremes)
+    baisses = variations.sort_values("variation_cts").head(nb_extremes)
+    hausses = hausses.assign(type="hausse")
+    baisses = baisses.assign(type="baisse")
+    return pd.concat([hausses, baisses]).reset_index(drop=True)
