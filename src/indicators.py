@@ -7,6 +7,7 @@ COL_DEPARTEMENT = "departement"
 COL_IMPLANTATION = "implantation"
 COL_DATE = "date_releve"
 COL_PRIX = "prix_gazole"
+JOURS_SEMAINE = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
 
 
 def prix_hebdo_par_station(historique: pd.DataFrame) -> pd.DataFrame:
@@ -88,6 +89,118 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     return par_departement
 
 
+def ecart_mensuel_a_l_annee(historique: pd.DataFrame) -> pd.DataFrame:
+    """Écart du prix médian de chaque mois au prix médian de son année (QA-2.1, H-4).
+
+    Entrée : historique joint (D-11). Responsable : Noé (#44).
+    Sortie : annee, mois, prix_median_mois, prix_median_annee, nb_stations,
+    ecart_cts, ecart_pct, ecart_euros_100l.
+    """
+    historique = historique.copy()
+    historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
+    historique["annee"] = historique[COL_DATE].dt.year
+    historique["mois"] = historique[COL_DATE].dt.month
+
+    # Une station qui publie tous les jours ne doit pas peser plus qu'une autre
+    prix_station_mois = historique.groupby([COL_STATION, "annee", "mois"]).agg(
+        prix_mensuel=(COL_PRIX, "mean")
+    )
+    prix_station_mois = prix_station_mois.reset_index()
+
+    # Référence de l'année sur la même base que les mois (une valeur par station et par mois)
+    prix_station_mois["prix_median_annee"] = prix_station_mois.groupby("annee")[
+        "prix_mensuel"
+    ].transform("median")
+
+    par_mois = prix_station_mois.groupby(["annee", "mois"]).agg(
+        prix_median_mois=("prix_mensuel", "median"),
+        prix_median_annee=("prix_median_annee", "first"),
+        nb_stations=(COL_STATION, "nunique"),
+    )
+    par_mois = par_mois.reset_index()
+
+    ecart = par_mois["prix_median_mois"] - par_mois["prix_median_annee"]
+    par_mois["ecart_cts"] = (ecart * 100).round(2)
+    par_mois["ecart_pct"] = (ecart / par_mois["prix_median_annee"] * 100).round(2)
+    # D-09 : avec 100 L de référence, 1 ct/L d'écart vaut 1 €
+    par_mois["ecart_euros_100l"] = par_mois["ecart_cts"]
+    return par_mois
+
+def comparer_profils_mensuels(ecarts_mensuels: pd.DataFrame) -> pd.DataFrame:
+    """Écarts mensuels en cts/L, une colonne par année (QA-2.2, H-4).
+
+    Entrée : sortie de ecart_mensuel_a_l_annee(). Responsable : Noé (#44).
+    Sortie : mois, une colonne par année, nb_annees_au_dessus.
+    """
+    # Une seule valeur par mois et par année : la moyenne par défaut la recopie telle quelle
+    profils = ecarts_mensuels.pivot_table(
+        index="mois", columns="annee", values="ecart_cts"
+    )
+
+    # H-4 : un mois « cher » chaque année doit être au-dessus de sa médiane 3 fois sur 3
+    profils["nb_annees_au_dessus"] = (profils > 0).sum(axis=1)
+
+    # Le nom "annee" resterait collé à l'en-tête des colonnes après reset_index
+    profils.columns.name = None
+    return profils.reset_index()
+
+
+
+def releves_par_jour_semaine(historique: pd.DataFrame) -> pd.DataFrame:
+    """Nombre et part des relevés publiés chaque jour de la semaine (QA-2.3, diagnostic).
+
+    Entrée : historique joint (D-11). Responsable : Noé (#44).
+    Sortie : jour, nb_releves, part_releves_pct, nb_stations.
+    """
+    historique = historique.copy()
+    historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
+    # dt.dayofweek donne 0 pour lundi et 6 pour dimanche : on garde l'ordre de la semaine
+    historique["num_jour"] = historique[COL_DATE].dt.dayofweek
+
+    par_jour = historique.groupby("num_jour").agg(
+        nb_releves=(COL_PRIX, "count"),
+        nb_stations=(COL_STATION, "nunique"),
+    )
+    par_jour = par_jour.reset_index()
+
+    par_jour["jour"] = [JOURS_SEMAINE[num] for num in par_jour["num_jour"]]
+    # Si les stations publiaient au hasard, chaque jour aurait environ 14,3 % des relevés
+    part = par_jour["nb_releves"] / par_jour["nb_releves"].sum() * 100
+    par_jour["part_releves_pct"] = part.round(1)
+    return par_jour[["jour", "nb_releves", "part_releves_pct", "nb_stations"]]
+
+def ecart_par_jour_semaine(
+    historique: pd.DataFrame, jours_max_sans_releve: int = 7
+) -> pd.DataFrame:
+    """Écart du prix médian de chaque jour de la semaine au prix médian global (QA-2.3).
+
+    Entrée : historique joint (D-11). Responsable : Noé (#44).
+    D-20 : entre deux relevés, le prix est supposé inchangé, au plus
+    jours_max_sans_releve jours. Sortie : jour, prix_median, nb_station_jours, ecart_cts.
+    """
+    historique = historique.copy()
+    historique[COL_DATE] = pd.to_datetime(historique[COL_DATE])
+
+    # Un prix par station et par jour : le dernier publié, celui en vigueur le soir
+    prix_jour = (
+        historique.set_index(COL_DATE).groupby(COL_STATION)[COL_PRIX].resample("D").last()
+    )
+    # Un jour sans relevé reprend le dernier prix de la même station, 7 jours au plus (D-20)
+    prix_jour = prix_jour.groupby(level=COL_STATION).ffill(limit=jours_max_sans_releve)
+    prix_jour = prix_jour.dropna().reset_index()
+
+    prix_jour["num_jour"] = prix_jour[COL_DATE].dt.dayofweek
+    par_jour = prix_jour.groupby("num_jour").agg(
+        prix_median=(COL_PRIX, "median"),
+        nb_station_jours=(COL_PRIX, "count"),
+    )
+    par_jour = par_jour.reset_index()
+    par_jour["jour"] = [JOURS_SEMAINE[num] for num in par_jour["num_jour"]]
+
+    # Chaque jour revient autant de fois sur la période : la hausse générale pèse pareil sur tous
+    ecart = par_jour["prix_median"] - prix_jour[COL_PRIX].median()
+    par_jour["ecart_cts"] = (ecart * 100).round(2)
+    return par_jour[["jour", "prix_median", "nb_station_jours", "ecart_cts"]]
 
 
 VOLUME_REFERENCE_L = 100  # D-09 : volume de référence pour les écarts en euros

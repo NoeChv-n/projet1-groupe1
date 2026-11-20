@@ -150,6 +150,12 @@
 - **Alternatives écartées** : utiliser partout le code postal (erreur connue, ANO-12) ; exclure les stations absentes du flux (biais du survivant, 7,8 % des relevés).
 - **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
+## D-20 · Prix supposé inchangé entre deux relevés (QA-2.3)
+- **Date** : 2026-11-19
+- **Décision** : pour comparer les jours de la semaine, chaque station reçoit un prix par jour : le dernier prix publié dans la journée, sinon le dernier prix connu de la station, au plus 7 jours après son dernier relevé.
+- **Justification** : un relevé correspond à une publication de prix, pas à une vente ; les stations publient moins le week-end (dimanche : 9,0 % des relevés et 770 stations, contre environ 905 en semaine), donc la médiane des relevés bruts par jour compare des groupes de stations différents. 7 jours couvrent un cycle complet de semaine ; au-delà, la station a pu fermer.
+- **Alternatives écartées** : médiane des relevés bruts par jour (biaisée, voir ci-dessus) ; remplissage sans limite (prolonge le prix des stations fermées).
+- **Statut** : Proposée (Noé), à valider en équipe
 ## D-19 · Seuil minimal de stations d'autoroute par département (QA-3.3)
 - **Date** : 2026-11-19
 - **Décision** : un département n'est interprété dans QA-3.3 que s'il compte au moins 5 stations A (hors station N). Les départements sous le seuil restent dans le tableau avec leurs effectifs, marqués `interprete = False`, et ne sont pas commentés. Le seuil est le paramètre `seuil_stations_a` de `ecart_autoroute_par_departement()`.
