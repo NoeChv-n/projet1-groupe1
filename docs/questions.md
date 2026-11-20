@@ -35,6 +35,18 @@
 | QA-4.2 | Quelles sont les semaines de plus forte hausse et de plus forte baisse, et quelle est leur ampleur ? | `prix@maj`, `prix@nom`, `prix@valeur` | Variation hebdomadaire en cts et en % | Validée |
 | QA-4.3 | Ces périodes coïncident-elles avec des événements datés à partir d'une source officielle référencée ? | `prix@maj`, `prix@valeur` + dates d'événements sourcées | Comparaison descriptive, sans lien causal ; chaque événement avec sa source | Validée (Q-05) |
 
+| Date | Événement | Montant (cts/L, gazole, métropole) | Source |
+|---|---|---|---|
+| 2022-04-01 | Entrée en vigueur de la remise à la pompe | 18 TTC | [Ministère de la Transition écologique, modalités de mise en œuvre](https://ecologie.gouv.fr/modalites-mise-en-oeuvre-remise-15-centimes-deuro-litre-lacquisition-carburants) ; [info.gouv.fr, toutes les réponses sur la remise carburant](https://www.info.gouv.fr/actualite/toutes-les-reponses-a-vos-questions-sur-la-remise-carburant) |
+| 2022-09-01 | Hausse du montant de la remise | 30 TTC | [info.gouv.fr, toutes les réponses sur la remise carburant](https://www.info.gouv.fr/actualite/toutes-les-reponses-a-vos-questions-sur-la-remise-carburant) |
+| 2022-11-16 | Baisse du montant de la remise | 10 TTC | [info.gouv.fr, toutes les réponses sur la remise carburant](https://www.info.gouv.fr/actualite/toutes-les-reponses-a-vos-questions-sur-la-remise-carburant) |
+| 2022-12-31 | Dernier jour d'application de la remise | 0 à partir du 2023-01-01 | [info.gouv.fr, toutes les réponses sur la remise carburant](https://www.info.gouv.fr/actualite/toutes-les-reponses-a-vos-questions-sur-la-remise-carburant) |
+
+Notes :
+- Les montants TTC et les périodes indiqués sont ceux de la page info.gouv.fr consultée. Le ministère confirme que la remise initiale était de 15 cts HT/L et que le prix affiché à la pompe en tenait compte.
+- Les metteurs à la consommation pouvaient vendre du carburant remisé aux stations dès le 27/03 afin qu'elles puissent appliquer la remise dès le 01/04. Certaines petites stations pouvaient toutefois ne pas avoir encore de carburant remisé en cuve au 01/04 ([page du ministère](https://ecologie.gouv.fr/modalites-mise-en-oeuvre-remise-15-centimes-deuro-litre-lacquisition-carburants)).
+- Les textes Légifrance des décrets 2022-423, 2022-1168 et 2022-1355 n'ont pas pu être ouverts lors de la vérification ; les montants HT et les détails de leurs articles ne sont donc pas repris ici.
+
 ---
 
 ## 1 bis. Hypothèses formulées avant calcul (EF-05)
