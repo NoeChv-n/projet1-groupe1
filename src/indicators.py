@@ -142,16 +142,22 @@ def prix_median_par_commune(
     """Prix médian par commune pour les communes ayant au moins `min_stations` (QA-1.2).
 
     Entrée : table jointe nettoyée (historique_joint_idf.parquet, D-18 appliquée).
+    Pour le 75, les stations sans commune renseignée sont rattachées à "Paris".
     Sortie : departement, ville, prix_median (€/L), nb_stations,
     ecart_med_reg_cts, ecart_med_reg_eur_100l, trié par prix croissant.
     """
     prix_hebdo = prix_hebdo_par_station(historique_joint)
 
     villes = (
-        historique_joint[[COL_STATION, "ville"]]
-        .dropna(subset=["ville"])
+        historique_joint[[COL_STATION, COL_DEPARTEMENT, "ville"]]
         .drop_duplicates(subset=[COL_STATION], keep="last")
+        .copy()
     )
+    masque_paris = (villes[COL_DEPARTEMENT].astype(str) == "75") & (
+        villes["ville"].isna()
+    )
+    villes.loc[masque_paris, "ville"] = "Paris"
+    villes = villes[[COL_STATION, "ville"]].dropna(subset=["ville"])
 
     par_station = (
         prix_hebdo.groupby([COL_STATION, COL_DEPARTEMENT])
@@ -194,12 +200,12 @@ def prix_median_par_commune(
 
 
 def dispersion_par_departement(
-    prix_hebdo: pd.DataFrame, par_annee: bool = False
+    prix_hebdo: pd.DataFrame, par_annee: bool = True
 ) -> pd.DataFrame:
     """Dispersion intra-départementale des prix médians par station (QA-1.3).
 
     Entrée : sortie de prix_hebdo_par_station() issue de la table jointe (D-18 appliquée).
-    Si par_annee=True, le calcul est effectué année par année (2021, 2022, 2023).
+    Si par_annee=True (défaut), le calcul est effectué année par année (2021, 2022, 2023).
     Sortie : [annee,] departement, nb_stations, prix_median, q1, q3, iqr_cts, ecart_p90_p10_cts.
     """
     df = prix_hebdo.copy()
