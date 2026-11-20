@@ -32,7 +32,7 @@
 - **Décision** : le responsable dépôt de la semaine relit par défaut ; si il ou elle est indisponible ou auteur de la PR, n'importe quel autre membre relit. Personne ne relit sa propre PR.
 - **Justification** : GIT-02 (1 approbation minimum) sans goulot d'étranglement ; rôle du responsable dépôt (CDC §11).
 - **Alternatives écartées** : un relecteur unique fixe (bloque l'équipe en cas d'absence).
-- **Statut** : Proposée, à valider en équipe
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-04 · Usage encadré d'un LLM comme assistant pédagogique
 - **Date** : 2026-10-27
@@ -102,50 +102,57 @@
 - **Décision** : six notebooks, exécutés dans cet ordre, chacun avec un seul propriétaire :
   - `01_exploration_historique` (Hafsa), `01_exploration_stations` (Thikana), `01_premiers_indicateurs` (Samuel, provisoire)
   - `02_nettoyage_historique` (Samuel), `02_nettoyage_stations` (Noé), `02_jointure` (Noé, co-autrice Thikana)
-  - `03_analyse` (propriétaire à désigner en J3) : un seul notebook, car l'analyse porte sur la table jointe des deux sources
+  - `03_analyse` (Noé) : un seul notebook, car l'analyse porte sur la table jointe des deux sources
   Le code réutilisable vit dans `src/` ; en analyse, chacun écrit ses fonctions dans `src/indicators.py` et le propriétaire de `03_analyse` les appelle.
 - **Justification** : un `.ipynb` est un fichier JSON que Git ne sait pas fusionner à deux ; un propriétaire par fichier évite les conflits ; QC-03. Écart à l'annexe B autorisé s'il est décrit dans le README.
 - **Alternatives écartées** : un notebook unique pour tout le projet (conflits à chaque PR) ; plusieurs notebooks d'analyse (les deux sources doivent être croisées dans la même table).
-- **Statut** : Proposée (Noé), à valider en relecture
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-13 · Calcul de l'écart de prix entre départements (QA-1.1)
 - **Date** : 2026-10-30
 - **Décision** : pour chaque station, calculer la médiane de ses prix hebdomadaires, puis calculer la médiane de ces valeurs par département ; exprimer l'écart de chaque département en cts/L et en % par rapport au département ayant la médiane la plus basse. Dans `prix_median_hebdo()`, `nb_stations` compte les stations ayant un prix la semaine concernée, pas les stations présentes dans la table.
 - **Justification** : QA-1.1 demande les prix médians par département et l'écart entre le moins cher et le plus cher (`docs/questions.md`). Une médiane par station évite de donner davantage de poids aux stations ayant plus de semaines renseignées. La différence entre la médiane maximale et minimale donne l'écart demandé ; le pourcentage est rapporté au prix du département le moins cher.
 - **Alternatives écartées** : comparer chaque département à la médiane régionale, qui ne répond pas à la comparaison du moins cher au plus cher ; calculer une médiane départementale directement sur toutes les semaines-stations, ce qui surpondérerait les stations ayant davantage de relevés.
-- **Statut** : Proposée, à valider en équipe
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-14 · Pose tardive des tags v0.1 et v0.2
 - **Date** : 2026-11-16
 - **Décision** : `v0.1` est posé sur le merge de la PR #18 et `v0.2` sur celui de la PR #33, tous deux le 16/11.
 - **Justification** : GIT-06 impose un tag par jalon ; on tague le premier état de `main` qui contient les livrables du jalon, sans réécrire l'historique.
 - **Alternatives écartées** : ne pas poser les tags manqués (exigence non remplie) ; les poser sur `main` actuel (ne reflète pas l'état au jalon).
-- **Statut** : Proposée (Noé), à valider en équipe
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-15 · Choix de l'outil du tableau de bord (ET-03)
 - **Date** : 2026-11-16
 - **Décision** : réaliser le tableau de bord avec Streamlit, dans une seule page `app/dashboard.py`, lancée par `streamlit run app/dashboard.py`. La version est figée dans `requirements.txt` (`streamlit==1.66.1`).
 - **Justification** : ET-03 impose Streamlit par défaut et n'autorise Dash ou Panel que sur demande validée en S44 ; aucune demande n'a été faite. TB-06 demande un lancement en une commande et un affichage en moins de 10 s, ce que permet la page minimale. ET-05 demande de rester léger pour un portable de 8 Go de RAM : Streamlit lit directement les fichiers Parquet avec pandas. ET-01 est respectée par la version figée dans `requirements.txt`.
 - **Alternatives écartées** : Dash et Panel, qui ne sont autorisés que sur demande validée en S44 (ET-03) et pour lesquels l'équipe n'a aucun besoin justifiant une dérogation.
-- **Statut** : Proposée, à valider en équipe
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-16 · Doublons fonctionnels de l'historique : garder la dernière ligne
 - **Date** : 2026-11-17
 - **Décision** : pour deux relevés de la même station au même instant, on garde la dernière ligne du fichier (`keep="last"`), dans `nettoyer_historique()`.
 - **Justification** : 8 lignes supprimées sur 587 090 lignes brutes (ANO-04) ; solution simple (`drop_duplicates`, vu en cours) qui conserve une valeur réelle de la source.
 - **Alternatives écartées** : moyenne des deux prix (valeur qui n'existe pas dans la source) ; double `NaN` (perte de relevés réels).
-- **Statut** : Proposée, à valider en relecture de #26. Hypothèse non vérifiée : l'ordre du fichier suit l'ordre de saisie.
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
 
 ## D-17 · Traitement des prix aberrants de l'historique, année par année
 - **Date** : 2026-11-17
 - **Décision** : dans `nettoyer_historique()`, appelée une année à la fois, les valeurs suivantes passent en `NaN` (la ligne est conservée), dans cet ordre : prix hors du seuil métier (< 1 € ou > 3 €), prix sous la borne basse 1,5 × IQR, prix supérieur à 1,5 fois la médiane de sa station.
 - **Justification** : les trois années n'ont pas le même niveau de prix (médianes de 1,499 € en 2021, 1,903 € en 2022 et 1,872 € en 2023), donc les bornes se calculent par année (ANO-05, ANO-07). Les prix élevés de mars et octobre 2022 et de septembre-octobre 2023 sont des chocs de marché (D-07) : la borne haute est relative à la station, pas un IQR global (ANO-03).
 - **Alternatives écartées** : IQR sur les trois années réunies ; borne haute à 1,3 × la médiane de la station (écarterait 63 relevés de 2022 qui semblent réels) ; suppression des lignes (interdit sans fiche ANO, CDC §8).
-- **Statut** : Proposée, à valider en équipe. Le seuil de 1,5 a été fixé après examen des données : en 2021 et en 2023, un vide sépare le dernier ratio plausible (1,2 à 1,4) des valeurs écartées (au moins 1,535) ; en 2022, aucun relevé ne dépasse 1,394.
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47) Le seuil de 1,5 a été fixé après examen des données : en 2021 et en 2023, un vide sépare le dernier ratio plausible (1,2 à 1,4) des valeurs écartées (au moins 1,535) ; en 2022, aucun relevé ne dépasse 1,394.
 
 ## D-18 · Département retenu après la jointure
 - **Date** : 2026-11-17
 - **Décision** : pour les stations retrouvées dans le flux v2, le département est celui du flux (`code_departement`) ; pour les 121 stations absentes du flux (ANO-13), c'est celui déduit des 2 premiers chiffres du code postal dans l'historique. La table jointe est enregistrée dans `data/processed/historique_joint_idf.parquet` ; c'est elle que lisent `03_analyse` et le tableau de bord.
 - **Justification** : ANO-12 montre que le code postal peut appartenir à un autre département ; le flux est la seule source officielle, mais il ne décrit pas les stations fermées. Garder ces stations évite le biais du survivant sur QA-4.
 - **Alternatives écartées** : utiliser partout le code postal (erreur connue, ANO-12) ; exclure les stations absentes du flux (biais du survivant, 7,8 % des relevés).
-- **Statut** : Proposée (Noé), à valider en équipe
+- **Statut** : Validée en équipe le 2026-11-19 (commentaire sur #47)
+
+## D-19 · Seuil minimal de stations d'autoroute par département (QA-3.3)
+- **Date** : 2026-11-19
+- **Décision** : un département n'est interprété dans QA-3.3 que s'il compte au moins 5 stations A (hors station N). Les départements sous le seuil restent dans le tableau avec leurs effectifs, marqués `interprete = False`, et ne sont pas commentés. Le seuil est le paramètre `seuil_stations_a` de `ecart_autoroute_par_departement()`.
+- **Justification** : en dessous de 5 stations A, la médiane hebdomadaire A repose sur une ou deux stations : l'écart mesurerait une station plutôt que l'autoroute du département. Même raisonnement et même valeur que D-08 pour les communes. Le seuil est fixé d'après le nombre de stations A par département (77 : 17, 91 : 9, 78 : 7, 95 : 6, 94 : 3, 93 : 2, 92 : 1) et non d'après les valeurs des écarts. Q-05 demande d'indiquer le nombre de stations derrière chaque comparaison.
+- **Alternatives écartées** : aucun seuil (le 93, avec 2 stations A, serait commenté comme le 77, qui en a 17) ; seuil de 10 (ne garderait que le 77) ; seuil de 3 (garderait le 94, dont la médiane repose sur 3 stations).
+- **Statut** : Proposée (Thikana), à valider en équipe

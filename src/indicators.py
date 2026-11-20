@@ -87,6 +87,7 @@ def prix_median_par_departement(prix_hebdo: pd.DataFrame) -> pd.DataFrame:
     ].round(2)
     return par_departement
 
+
 # --- Axe QA-1 (Hafsa) ---
 
 

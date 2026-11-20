@@ -212,3 +212,12 @@
   dans la fonction. L'exclusion des comparaisons est à appliquer à la jointure
   ou en analyse ; `N` reste conservé dans `implantation`.
 - **Détectée par / date** : Thikana, [11/11/2026] ; complétée par Samuel, 2026-11-17 · #26
+
+## ANO-15 · Implantation d'une station qui change d'une année à l'autre
+- **Colonne(s)** : `implantation` (issue de `pop`)
+- **Description** : la station 95320005 (département 95) vaut `N` en 2021 (52 semaines), `A` en 2022 (52) et `R` en 2023 (53). Les trois valeurs ne se chevauchent pas ; aucune station n'a deux lignes la même semaine. Complète ANO-14, qui ne décrivait que le `N` de 2021.
+- **Ampleur** : 1 station sur 908 ; 157 lignes de grille sur 131 457 (≈ 0,12 %).
+- **Cause probable** : non déterminée ; à vérifier dans la documentation du producteur.
+- **Traitement retenu** : la station est exclue en entier des comparaisons route/autoroute (`exclure_stations_n()`). Ses relevés restent dans la table jointe. Son type de route n'est pas fiable.
+- **Impact sur l'analyse** : 1 station retirée de H-1 et de QA-3 ; impact négligeable sur les médianes hebdomadaires.
+- **Détectée par / date** : Thikana, 2026-11-19 · #41
