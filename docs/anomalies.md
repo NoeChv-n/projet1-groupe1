@@ -7,19 +7,19 @@
 
 ## Récapitulatif
 
-| ID     | Colonne(s) | Résumé                                   | Ampleur               | Traitement          |
-| ------ | ---------- | ---------------------------------------- | --------------------- | ------------------- |
-| ANO-02 | `prix` | Prix du gazole < 1 € (2021-2023) | 65 relevés sur 587 090 (≈ 0,01 %) | `NaN` si prix < 1 € |
-| ANO-03 | `prix` | Prix du gazole > 3 € (2021-2023) | 8 relevés : 2 en 2021, 3 en 2022, 3 en 2023 | `NaN` si prix > 3 € ; prix plausibles conservés |
-| ANO-04 | `id_pdv`, `date`, `prix` | Même station, même instant, prix différents | 8 lignes supprimées | Dernière ligne conservée (D-16) |
-| ANO-05 | `prix` | Prix très inférieurs au prix habituel de la station | 27 en 2023 ; 16 (2021) et ≈ 40 (2022) déduits | `NaN` sous 1,5 × IQR (D-17) |
-| ANO-06 | `prix` | Prix en millièmes d'euro en 2021 | 209 501 lignes (2021) | Corrigé (÷ 1 000) |
-| ANO-07 | `prix` | Prix très supérieurs au prix habituel de la station | 6 relevés (2021 : 2, 2023 : 4) | `NaN` au-delà de 1,5 × médiane (D-17) |
-| ANO-10 | `Région`, `Ville`, `code_departement` | 4 stations sans rattachement géographique | 4 / 9 820 (0,04 %) | Signalé, exclu par le filtre IDF |
-| ANO-11 | `latitude`, `longitude` | Coordonnées en degrés × 100 000 | 833 / 833 (100 %) | Corrigé (÷ 100 000) |
-| ANO-12 | `Code postal`, `code_departement` | Code postal d'une autre commune que le département | 4 / 833 stations (0,5 %) ; 802 / 587 082 relevés (0,14 %) | Département du flux retenu (D-18) |
-| ANO-13 | `id` | Stations de l'historique absentes du flux | 121 / 908 stations (13,3 %) ; 45 649 relevés (7,8 %) | Conservées, jointure gauche (D-18) |
-| ANO-14 | `pop` | Valeur `N` dans l'historique IDF 2021 | 47 / 209 501 (≈ 0,02 %), 1 station | Conservé ; exclu des comparaisons route/autoroute |
+| ID     | Colonne(s)                            | Résumé                                              | Ampleur                                                   | Traitement                                        |
+| ------ | ------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------- |
+| ANO-02 | `prix`                                | Prix du gazole < 1 € (2021-2023)                    | 65 relevés sur 587 090 (≈ 0,01 %)                         | `NaN` si prix < 1 €                               |
+| ANO-03 | `prix`                                | Prix du gazole > 3 € (2021-2023)                    | 8 relevés : 2 en 2021, 3 en 2022, 3 en 2023               | `NaN` si prix > 3 € ; prix plausibles conservés   |
+| ANO-04 | `id_pdv`, `date`, `prix`              | Même station, même instant, prix différents         | 8 lignes supprimées                                       | Dernière ligne conservée (D-16)                   |
+| ANO-05 | `prix`                                | Prix très inférieurs au prix habituel de la station | 27 en 2023 ; 16 (2021) et ≈ 40 (2022) déduits             | `NaN` sous 1,5 × IQR (D-17)                       |
+| ANO-06 | `prix`                                | Prix en millièmes d'euro en 2021                    | 209 501 lignes (2021)                                     | Corrigé (÷ 1 000)                                 |
+| ANO-07 | `prix`                                | Prix très supérieurs au prix habituel de la station | 6 relevés (2021 : 2, 2023 : 4)                            | `NaN` au-delà de 1,5 × médiane (D-17)             |
+| ANO-10 | `Région`, `Ville`, `code_departement` | 4 stations sans rattachement géographique           | 4 / 9 820 (0,04 %)                                        | Signalé, exclu par le filtre IDF                  |
+| ANO-11 | `latitude`, `longitude`               | Coordonnées en degrés × 100 000                     | 833 / 833 (100 %)                                         | Corrigé (÷ 100 000)                               |
+| ANO-12 | `Code postal`, `code_departement`     | Code postal d'une autre commune que le département  | 4 / 833 stations (0,5 %) ; 802 / 587 082 relevés (0,14 %) | Département du flux retenu (D-18)                 |
+| ANO-13 | `id`                                  | Stations de l'historique absentes du flux           | 121 / 908 stations (13,3 %) ; 45 649 relevés (7,8 %)      | Conservées, jointure gauche (D-18)                |
+| ANO-14 | `pop`                                 | Valeur `N` dans l'historique IDF 2021               | 47 / 209 501 (≈ 0,02 %), 1 station                        | Conservé ; exclu des comparaisons route/autoroute |
 
 ## Contrôles minimaux (CDC §8)
 
@@ -115,6 +115,7 @@
 - **Détectée par / date** : Samuel, 2026-11-17 · #26
 
 ## ANO-10 · Région, ville et département manquants pour 4 stations
+
 - **Colonne(s)** : `Région`, `Ville`, `code_departement`
 - **Description** : les trois colonnes sont vides ensemble pour 4 stations.
   Exemple : id 76600022, Code postal 76600, Région = NaN.
@@ -129,6 +130,7 @@
 - **Détectée par / date** : Thikana, [11/11/2026] · traitée par Noé, 2026-11-16 (#27)
 
 ## ANO-11 · Coordonnées GPS dans une unité non standard (degrés × 100 000)
+
 - **Colonne(s)** : `latitude`, `longitude`
 - **Description** : valeurs en degrés × 100 000, parfois avec décimales,
   ex. latitude 4883600, longitude 235927.279911.
@@ -145,6 +147,7 @@
 - **Détectée par / date** : Thikana, [11/11/2026] · traitée par Noé, 2026-11-16 (#27)
 
 ## ANO-12 · Code postal incohérent avec le département
+
 - **Colonne(s)** : `Code postal`, `code_departement`
 - **Description** : les 2 premiers chiffres du code postal diffèrent du
   département pour 4 stations : 78800001 (Bezons, 78800, dép. 95),
@@ -169,6 +172,7 @@
 - **Traitement à la jointure** : département du flux retenu (D-18) ; impact principal sur H-2, la station 94160001 étant rattachée à Paris
 
 ## ANO-13 · Stations de l'historique 2021 absentes du flux actuel
+
 - **Colonne(s)** : `id` (historique 2021 et flux v2)
 - **Description** : des stations de l'historique 2021 n'ont plus de ligne dans
   le flux v2 du 09/11/2026. Exemple : le flux v2 du 09/11/2026. Exemple : id 75005001.
@@ -195,6 +199,7 @@
 - **Suivi** : traité dans #35 (`02_jointure`).
 
 ## ANO-14 · Valeur de pop hors domaine dans l'historique 2021
+
 - **Colonne(s)** : `pop`
 - **Description** : `pop` vaut `N` pour 1 station de l'historique 2021 en
   Île-de-France (aucun `N` en 2022 ni en 2023), alors que le flux n'a que `R`
@@ -214,6 +219,7 @@
 - **Détectée par / date** : Thikana, [11/11/2026] ; complétée par Samuel, 2026-11-17 · #26
 
 ## ANO-15 · Implantation d'une station qui change d'une année à l'autre
+
 - **Colonne(s)** : `implantation` (issue de `pop`)
 - **Description** : la station 95320005 (département 95) vaut `N` en 2021 (52 semaines), `A` en 2022 (52) et `R` en 2023 (53). Les trois valeurs ne se chevauchent pas ; aucune station n'a deux lignes la même semaine. Complète ANO-14, qui ne décrivait que le `N` de 2021.
 - **Ampleur** : 1 station sur 908 ; 157 lignes de grille sur 131 457 (≈ 0,12 %).
@@ -221,3 +227,13 @@
 - **Traitement retenu** : la station est exclue en entier des comparaisons route/autoroute (`exclure_stations_n()`). Ses relevés restent dans la table jointe. Son type de route n'est pas fiable.
 - **Impact sur l'analyse** : 1 station retirée de H-1 et de QA-3 ; impact négligeable sur les médianes hebdomadaires.
 - **Détectée par / date** : Thikana, 2026-11-19 · #41
+
+## ANO-16 · Communes (`ville`) manquantes dans la table jointe
+
+- **Colonne(s)** : `ville`
+- **Description** : 121 stations présentes dans `historique_joint_idf.parquet` n'ont pas de commune renseignée (`NaN`). Répartition par département : 75 → 16, 77 → 20, 78 → 16, 91 → 18, 92 → 16, 93 → 16, 94 → 7, 95 → 12.
+- **Ampleur** : 121 stations sur 908 (≈ 13,3 %).
+- **Cause probable** : stations présentes dans l'historique mais absentes du flux actuel (en lien avec ANO-13) ou métadonnées incomplètes lors de la jointure.
+- **Traitement retenu** : dans `prix_median_par_commune()`, les 16 stations du département 75 sont rattachées à `"Paris"` (département mono-commune). Les 105 autres stations (hors 75) sont exclues du classement par commune, mais restent conservées dans la table jointe.
+- **Impact sur l'analyse** : 105 stations retirées de QA-1.2 ; certaines communes hors 75 peuvent passer sous le seuil D-08 de 5 stations. Aucun impact sur QA-1.1 (H-2) ni sur QA-1.3.
+- **Détectée par / date** : Hafsa, 2026-11-20 · #42
