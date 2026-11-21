@@ -33,6 +33,13 @@ _Les plus récentes en haut. Format produit par le LLM avec le mot « clôture �
 > **Ce qu'il ne remplace pas** : les décisions vont dans `decisions.md`, les anomalies dans `anomalies.md`, les questions au commanditaire dans `questions.md`. Ici on **renvoie** vers ces fichiers, on ne recopie pas.
 > **Règles** : l'entrée de journal est commitée dans la même PR que le travail qu'elle décrit. En cas de conflit sur ce fichier, on garde les deux blocs.
 
+### 2026-11-21 · Samuel · Responsable dépôt · Issue #43
+- **Fait** : trois fonctions dans `src/indicators.py` (`evenements_remise_2022`, `variation_autour_evenements`, `variations_hebdo_extremes`) ; tableau des événements sourcés de la remise 2022 et statut de H-3 (Nuancée) dans `questions.md` ; fiches ANO-08 et ANO-09
+- **Décisions** : D-21 (seuil « peu de stations ») et D-22 (règle de coïncidence) → déjà dans decisions.md
+- **Anomalies** : ANO-08 (rupture de série due à la remise 2022) et ANO-09 (semaines de bord à effectif réduit) créées
+- **Bloquant / question** : PR en attente de relecture et d'approbation (D-03)
+- **Prochaine étape** : faire relire la PR par le responsable dépôt, puis fusionner une fois approuvée et la CI verte
+
 ### 2026-11-19 · Noé · Chef de projet · Issue #47
 - **Fait** : tableau des rôles S47 mis à jour (#41 à #47) ; D-03, D-12 (`03_analyse` attribué à Noé) et D-18 passées « Validée » ; ANO-06 : « Cause probable » sourcée (ancienne FAQ ×1 000, rupture 2022 constatée par un dépôt tiers, ordre de grandeur SDES) ; ruff OK sur `main`
 - **Décisions** : D-03, D-12, D-18 validées en équipe le 19/11 → déjà reportées dans decisions.md
