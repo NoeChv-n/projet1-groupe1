@@ -167,7 +167,7 @@
 - **Date** : 2026-11-20
 - **Décision** : une semaine est signalée « peu de stations » si son nombre de stations est inférieur à 90 % de la médiane des effectifs hebdomadaires de la série (≈ 676 sur 2021-2023). Elle est signalée, pas retirée du classement.
 - **Justification** : l'issue #43 demande de signaler sans interpréter ; seuil relatif à la distribution observée (médiane 751, premier quartile 718) plutôt qu'un chiffre fixe.
-- **Alternatives écartées** : seuil absolu de 700 (arbitraire ; aurait signalé la semaine 2022-10-16 après qu'elle est apparue dans le classement) ; retirer les semaines signalées (perte d'information).
+- **Alternatives écartées** : seuil absolu de 700 stations plutôt que seuil relatif à la distribution ; retirer les semaines signalées (perte d'information). Le seuil retenu est fixé d'après la distribution (médiane 751, premier quartile 718). La semaine 2022-10-16 (694 stations) n'est pas signalée mais figure dans le classement ; cette limite est écrite dans la PR.
 - **Statut** : Proposée, à valider en équipe
 
 ## D-22 · Règle de coïncidence entre une semaine et un événement de la remise
