@@ -299,7 +299,7 @@ def ecart_autoroute_par_departement(
         if nb_stations_a == 0:
             continue  # pas de comparaison possible (ex. Paris)
 
-<<<<<<< HEAD
+
         prix_dep = prix_ar[prix_ar[COL_DEPARTEMENT] == departement]
         ecart = ecart_autoroute_hebdo(prix_dep)
         resultats.append(
@@ -316,34 +316,9 @@ def ecart_autoroute_par_departement(
             }
         )
     return pd.DataFrame(resultats)
-=======
-        prix_75 = ligne_75.iloc[0]
-        ecart = stats["prix_median"] - prix_75
 
-        stats["annee"] = annee
-        stats["ecart_75_cts"] = (ecart * 100).round(2)
-        stats["ecart_75_pct"] = (ecart / prix_75 * 100).round(2)
-        # D-09 : 1 ct/L équivaut à 1 € pour 100 L
-        stats["ecart_75_eur_100l"] = stats["ecart_75_cts"]
 
-        resultats.append(stats)
-
-    if not resultats:
-        return pd.DataFrame()
-
-    colonnes = [
-        "annee",
-        COL_DEPARTEMENT,
-        "prix_median",
-        "nb_stations",
-        "ecart_75_cts",
-        "ecart_75_pct",
-        "ecart_75_eur_100l",
-        "ecart_cts",
-        "ecart_pct",
-    ]
-    return pd.concat(resultats, ignore_index=True)[colonnes]
-
+  
 
 def prix_median_par_commune(
     historique_joint: pd.DataFrame, min_stations: int = 5
