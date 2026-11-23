@@ -15,6 +15,8 @@
 | ANO-05 | `prix` | Prix très inférieurs au prix habituel de la station | 27 en 2023 ; 16 (2021) et ≈ 40 (2022) déduits | `NaN` sous 1,5 × IQR (D-17) |
 | ANO-06 | `prix` | Prix en millièmes d'euro en 2021 | 209 501 lignes (2021) | Corrigé (÷ 1 000) |
 | ANO-07 | `prix` | Prix très supérieurs au prix habituel de la station | 6 relevés (2021 : 2, 2023 : 4) | `NaN` au-delà de 1,5 × médiane (D-17) |
+| ANO-08 | `prix_gazole`, `date_releve` | Rupture de série : remise à la pompe 2022 (4 changements de niveau) | 145 900 relevés sur 587 082 (≈ 24,9 %) | Conservé, signalé ; dates dans `evenements_remise_2022()` |
+| ANO-09 | `semaine` (issue de `date_releve`) | Première et dernière semaines de la série à effectif réduit | 2 semaines sur 157 : 460 et 654 stations (médiane 751) | Signalé (D-21), non retiré |
 | ANO-10 | `Région`, `Ville`, `code_departement` | 4 stations sans rattachement géographique | 4 / 9 820 (0,04 %) | Signalé, exclu par le filtre IDF |
 | ANO-11 | `latitude`, `longitude` | Coordonnées en degrés × 100 000 | 833 / 833 (100 %) | Corrigé (÷ 100 000) |
 | ANO-12 | `Code postal`, `code_departement` | Code postal d'une autre commune que le département | 4 / 833 stations (0,5 %) ; 802 / 587 082 relevés (0,14 %) | Département du flux retenu (D-18) |
@@ -27,8 +29,8 @@
 - [ ] 2. Valeurs manquantes, y compris déguisées (0, chaîne vide, « -1 ») — flux IDF : 0 coordonnée manquante ou illisible (#27) ; historique : 0 prix illisible, prix à 0 traités par ANO-02 (#26)
 - [ ] 3. Types incohérents (dates en texte, codes postaux sans zéro initial, prix et coordonnées en entiers) — flux IDF : codes postaux à 5 caractères, coordonnées converties (#27, ANO-11) ; historique : dates converties, prix en entiers en 2021 (ANO-06) (#26)
 - [x] 4. Valeurs hors domaine ou aberrantes : seuil métier 1 à 3 €, borne basse 1,5 × IQR, 1,5 × médiane de la station (ANO-02, 03, 05, 07)
-- [ ] 5. Ruptures de série (carburants apparus/disparus, format XML qui change, remises 2022) — fait : échelle de 2021 (ANO-06), chocs de 2022 examinés (ANO-07) ; reste : remises à la pompe, carburants apparus/disparus
-- [x] 6. Couverture : historique, 2021, 2022 et 2023 couvrent chacun leur année complète (#26)
+- [ ] 5. Ruptures de série (carburants apparus/disparus, format XML qui change, remises 2022) — fait : échelle de 2021 (ANO-06), chocs de 2022 examinés (ANO-07) ; remises à la pompe : ANO-08 ; reste : carburants apparus/disparus
+- [x] 6. Couverture : historique, 2021, 2022 et 2023 couvrent chacun leur année complète (#26) ; semaines de bord incomplètes : ANO-09
 
 ---
 
@@ -113,6 +115,26 @@
 - **Conservé volontairement** : 63 relevés de 2022 au-dessus de 1,3 fois la médiane de leur station (60 en mars, 3 en octobre : les deux chocs de prix), ratio maximal 1,394 ; et le relevé 2,560 € de 94420001 en 2023 (ratio 1,33).
 - **Impact sur l'analyse** : négligeable sur les médianes. Limite : la médiane annuelle est fragile pour les stations à peu de relevés.
 - **Détectée par / date** : Samuel, 2026-11-17 · #26
+
+## ANO-08 · Rupture de série : remise à la pompe 2022
+
+- **Colonne(s) concernée(s)** : `prix_gazole`, `date_releve`
+- **Description** : en 2022, les prix affichés à la pompe intègrent une remise de l'État dont le montant change quatre fois : 0 → 18 cts/L TTC le 2022-04-01, 18 → 30 le 2022-09-01, 30 → 10 le 2022-11-16, 10 → 0 le 2023-01-01. Les prix de part et d'autre de chaque date ne sont pas comparables sans tenir compte de ce changement. Exemple : médiane hebdomadaire de 2,13 €/L (semaine du 2022-03-27) puis 1,86 €/L (semaine du 2022-04-10), soit −27,15 cts/L pour −18 cts/L de remise attendue.
+- **Ampleur** : du 2022-04-01 au 2022-12-31, 275 jours sur 1 095 (≈ 25 % de la période) ; 145 900 relevés sur 587 082 (≈ 24,9 %).
+- **Cause probable** : mesure publique datée (sources dans `docs/questions.md`, QA-4.3 : info.gouv.fr et ministère de la Transition écologique).
+- **Traitement retenu** : conservé et signalé. Aucun prix n'est corrigé ni retiré ; les dates sont exposées par `evenements_remise_2022()`.
+- **Impact sur l'analyse** : une comparaison de niveaux de prix entre deux périodes qui encadrent ces dates (QA-2, QA-3.2, QA-4) peut refléter la remise autant que le marché. Pour H-3, les variations observées valent environ 1,5 à 1,7 fois l'attendu au 01/04, au 01/09 et au 01/01/2023, et très peu au 16/11 (+1,31 contre +20 cts/L), sans explication établie.
+- **Détectée par / date** : Samuel, 2026-11-21 · #43
+
+## ANO-09 · Première et dernière semaines de la série à effectif réduit
+
+- **Colonne(s) concernée(s)** : `semaine` (issue de `date_releve`), `nb_stations`
+- **Description** : la première semaine (2021-01-03) compte 460 stations ayant un prix, contre 751 en médiane sur la série ; la dernière (2023-12-31) en compte 654. La variation de la semaine 2021-01-10 se calcule contre la première.
+- **Ampleur** : 2 semaines sur 157 (≈ 1,3 %) ; 460 stations, soit −39 % par rapport à la médiane, et 654, soit −13 %.
+- **Cause probable** : la série commence le vendredi 2021-01-01 à 00:01, donc la semaine du 28/12/2020 au 03/01/2021 est partielle (3 jours sur 7). Pour la dernière semaine (série complète jusqu'au 31/12 à 22:52), la cause de l'effectif réduit n'est pas déterminée.
+- **Traitement retenu** : signalé, pas retiré. `variations_hebdo_extremes()` écarte la première semaine (pas de semaine précédente) et marque `peu_de_stations` les semaines sous 90 % de la médiane (D-21, ≈ 676). Aucune des 10 semaines extrêmes n'est concernée.
+- **Impact sur l'analyse** : la variation de 2021-01-10 est calculée contre une semaine partielle et n'est pas à interpréter ; aucun chiffre de QA-4.2 n'est affecté.
+- **Détectée par / date** : Samuel, 2026-11-21 · #43
 
 ## ANO-10 · Région, ville et département manquants pour 4 stations
 - **Colonne(s)** : `Région`, `Ville`, `code_departement`

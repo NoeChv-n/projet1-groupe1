@@ -315,3 +315,108 @@ def ecart_autoroute_par_departement(
             }
         )
     return pd.DataFrame(resultats)
+
+URL_REMISE = (
+    "https://www.info.gouv.fr/actualite/"
+    "toutes-les-reponses-a-vos-questions-sur-la-remise-carburant"
+)
+
+
+def evenements_remise_2022() -> pd.DataFrame:
+    """Dates de changement de la remise à la pompe en 2022 (QA-4.3, H-3).
+
+    Responsable : Samuel. Montants en cts/L TTC (gazole, métropole), sources
+    dans docs/questions.md. Sortie : date_effet, evenement, remise_avant_cts,
+    remise_apres_cts, source.
+    """
+    dates = pd.to_datetime(["2022-04-01", "2022-09-01", "2022-11-16", "2023-01-01"])
+    tableau = pd.DataFrame({
+        "date_effet": dates,
+        "evenement": [
+            "Entrée en vigueur de la remise",
+            "Hausse du montant de la remise",
+            "Baisse du montant de la remise",
+            "Fin de la remise",
+        ],
+        "remise_avant_cts": [0, 18, 30, 10],
+        "remise_apres_cts": [18, 30, 10, 0],
+    })
+    tableau["source"] = URL_REMISE
+    return tableau
+
+def variation_autour_evenements(
+    mediane: pd.DataFrame, evenements: pd.DataFrame
+) -> pd.DataFrame:
+    """Variation du prix médian autour de chaque changement de remise (H-3, QA-4.3).
+
+    Entrée : sortie de prix_median_hebdo() et de evenements_remise_2022().
+    Responsable : Samuel. Compare la dernière semaine entière avant l'événement
+    à la première semaine entière après. Sortie : une ligne par événement.
+    """
+    mediane = mediane.set_index("semaine")
+    lignes = []
+    for i in range(len(evenements)):
+        date_effet = evenements.loc[i, "date_effet"]
+        # Les semaines sont datées du dimanche : on part du dimanche qui clôt la semaine de l'événement
+        fin_semaine = date_effet.to_period("W-SUN").end_time.normalize()
+        semaine_avant = fin_semaine - pd.Timedelta(days=7)
+        semaine_apres = fin_semaine + pd.Timedelta(days=7)
+
+        variation_cts = (
+            mediane.loc[semaine_apres, "prix_median"]
+            - mediane.loc[semaine_avant, "prix_median"]
+        ) * 100
+        # Une remise qui augmente fait baisser le prix : le signe est inversé
+        attendue_cts = (
+            evenements.loc[i, "remise_avant_cts"] - evenements.loc[i, "remise_apres_cts"]
+        )
+        lignes.append({
+            "date_effet": date_effet,
+            "semaine_avant": semaine_avant,
+            "semaine_apres": semaine_apres,
+            "nb_stations_avant": mediane.loc[semaine_avant, "nb_stations"],
+            "nb_stations_apres": mediane.loc[semaine_apres, "nb_stations"],
+            "variation_cts": round(variation_cts, 2),
+            "attendue_cts": attendue_cts,
+            "variation_euros_100l": round(variation_cts * VOLUME_REFERENCE_L / 100, 2),
+            "attendue_euros_100l": attendue_cts * VOLUME_REFERENCE_L / 100,
+        })
+    return pd.DataFrame(lignes)
+
+def variations_hebdo_extremes(
+    mediane: pd.DataFrame,
+    evenements: pd.DataFrame,
+    nb_extremes: int = 5,
+    part_min_stations: float = 0.9,
+) -> pd.DataFrame:
+    """Semaines de plus forte hausse et de plus forte baisse du prix médian (QA-4.2).
+
+    Entrée : sortie de prix_median_hebdo() et de evenements_remise_2022().
+    Responsable : Samuel. Sortie : nb_extremes hausses puis nb_extremes baisses,
+    avec variation_cts, variation_pct, nb_stations, peu_de_stations et
+    evenement_coincident (événement daté de la semaine ou de la précédente).
+    """
+    variations = mediane.copy()
+    variations["variation_cts"] = variations["prix_median"].diff() * 100
+    variations["variation_pct"] = variations["prix_median"].pct_change() * 100
+    # La première semaine n'a pas de semaine précédente : pas de variation
+    variations = variations.dropna(subset=["variation_cts"])
+
+    # Une semaine à peu de stations est signalée, pas retirée du classement
+    seuil = mediane["nb_stations"].median() * part_min_stations
+    variations["peu_de_stations"] = variations["nb_stations"] < seuil
+
+    coincide = []
+    for semaine in variations["semaine"]:
+        debut = semaine - pd.Timedelta(days=13)  # la semaine précédente commence 13 jours avant
+        dans_fenetre = evenements[
+            (evenements["date_effet"] >= debut) & (evenements["date_effet"] <= semaine)
+        ]
+        coincide.append(", ".join(dans_fenetre["evenement"]))
+    variations["evenement_coincident"] = coincide
+
+    hausses = variations.sort_values("variation_cts", ascending=False).head(nb_extremes)
+    baisses = variations.sort_values("variation_cts").head(nb_extremes)
+    hausses = hausses.assign(type="hausse")
+    baisses = baisses.assign(type="baisse")
+    return pd.concat([hausses, baisses]).reset_index(drop=True)

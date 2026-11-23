@@ -162,3 +162,17 @@
 - **Justification** : en dessous de 5 stations A, la médiane hebdomadaire A repose sur une ou deux stations : l'écart mesurerait une station plutôt que l'autoroute du département. Même raisonnement et même valeur que D-08 pour les communes. Le seuil est fixé d'après le nombre de stations A par département (77 : 17, 91 : 9, 78 : 7, 95 : 6, 94 : 3, 93 : 2, 92 : 1) et non d'après les valeurs des écarts. Q-05 demande d'indiquer le nombre de stations derrière chaque comparaison.
 - **Alternatives écartées** : aucun seuil (le 93, avec 2 stations A, serait commenté comme le 77, qui en a 17) ; seuil de 10 (ne garderait que le 77) ; seuil de 3 (garderait le 94, dont la médiane repose sur 3 stations).
 - **Statut** : Proposée (Thikana), à valider en équipe
+
+## D-21 · Seuil « peu de stations » pour les variations hebdomadaires
+- **Date** : 2026-11-20
+- **Décision** : une semaine est signalée « peu de stations » si son nombre de stations est inférieur à 90 % de la médiane des effectifs hebdomadaires de la série (≈ 676 sur 2021-2023). Elle est signalée, pas retirée du classement.
+- **Justification** : l'issue #43 demande de signaler sans interpréter ; seuil relatif à la distribution observée (médiane 751, premier quartile 718) plutôt qu'un chiffre fixe.
+- **Alternatives écartées** : seuil absolu de 700 stations plutôt que seuil relatif à la distribution ; retirer les semaines signalées (perte d'information). Le seuil retenu est fixé d'après la distribution (médiane 751, premier quartile 718). La semaine 2022-10-16 (694 stations) n'est pas signalée mais figure dans le classement ; cette limite est écrite dans la PR.
+- **Statut** : Proposée, à valider en équipe
+
+## D-22 · Règle de coïncidence entre une semaine et un événement de la remise
+- **Date** : 2026-11-20
+- **Décision** : un événement coïncide avec la semaine t si sa date tombe dans la semaine t ou dans la semaine t−1 (la variation entre t−1 et t en garde la trace).
+- **Justification** : un événement en milieu de semaine n'agit qu'en partie sur cette semaine ; formulation descriptive, sans lien causal (QA-4.3).
+- **Alternatives écartées** : événement dans la seule semaine t (rate l'effet de la semaine suivante).
+- **Statut** : Proposée, à valider en équipe
